@@ -3,9 +3,10 @@ from pytorch_lightning import LightningModule, LightningDataModule
 from pytorch_lightning import Trainer
 from pytorch_lightning.cli import LightningCLI, LightningArgumentParser
 from pytorch_lightning.loggers import WandbLogger
-from datetime import datetime
 import os
 
+import urllib3
+urllib3.disable_warnings()
 
 class LoggerLightningCLI(LightningCLI):
 
@@ -15,6 +16,7 @@ class LoggerLightningCLI(LightningCLI):
 
         parser.add_class_arguments(WandbLogger, nested_key="wandb_logger")
         parser.link_arguments(source="trainer.default_root_dir", target="wandb_logger.save_dir")
+        parser.link_arguments(source="wandb_logger.name", target="wandb_logger.version")
 
 
     def instantiate_trainer(self, **kwargs) -> Trainer:

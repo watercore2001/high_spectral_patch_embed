@@ -34,22 +34,17 @@ class FMOWSentinelDataset(Dataset):
     def __init__(self,
                  sentinel_root_path: str,
                  csv_path: str,
+                 choice_percent: float,
                  input_size : int,
                  is_train: bool,
                  masked_bands: list[int] | None,
                  dropped_bands: list[int] | None):
         """
         Create FMoW sentinel dataset using SatMae Setting
-        :param sentinel_root_path:
-        :param csv_path:
-        :param input_size:
-        :param is_train:
-        :param masked_bands:
-        :param dropped_bands:
         """
         self.sentinel_root_path = sentinel_root_path
         self.df = pd.read_csv(csv_path).sort_values(["category", "location_id", "timestamp"])
-        self.indices = self.df.index.unique().to_numpy()
+        self.indices = self.random_choose_indices(choice_percent)
 
         if is_train:
             self.image_transform = FMOWSentinelTrainTransform(self.mean, self.std, input_size)
@@ -61,6 +56,16 @@ class FMOWSentinelDataset(Dataset):
 
     def __len__(self):
         return len(self.df)
+
+    def random_choose_indices(self, choice_percent: float) -> np.ndarray:
+        indexes = np.array([])  # Empty numpy array to store the indexes
+
+        for value in self.df['category'].unique():
+            category_rows = self.df[self.df['category'] == value]  # Get rows belonging to a specific category
+            rows_to_select = int(len(category_rows) * 0.1)  # Calculate 10% of the rows for selection
+            selected_indexes = np.random.choice(category_rows.index, size=rows_to_select,
+                                                replace=False)  # Randomly select indexes
+            indexes = np.concatenate((indexes, selected_indexes))  # Append selected indexes to the numpy array
 
     def get_image_path(self, index: int) -> str:
         row = self.df.iloc[index]

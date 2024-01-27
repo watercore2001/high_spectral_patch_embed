@@ -1,0 +1,18 @@
+default_root_dir: "/mnt/disk/xials/workspace/"
+accelerator: gpu
+logger: True
+# debug mode
+# fast_dev_run: True
+max_epochs: 200
+callbacks:
+  - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+    init_args:
+      filename: "{epoch:03d}_{val_accuracy_micro:.4f}"
+      monitor: val_accuracy_micro
+      mode: max
+      save_last: True
+  - class_path: pytorch_lightning.callbacks.EarlyStopping
+    init_args:
+      monitor: val_accuracy_micro
+      mode: max
+      patience: 20

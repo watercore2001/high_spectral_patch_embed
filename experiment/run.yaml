@@ -1,0 +1,12 @@
+seed_everything: 0
+
+data: fmow.yaml
+model: resnet.yaml
+trainer: trainer.yaml
+
+used_ckpt_for_test: "best"
+used_ckpt_for_predict: "no"
+
+wandb_logger:
+  project: meta_embedding
+  name: resnet50

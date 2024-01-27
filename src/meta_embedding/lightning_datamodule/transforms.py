@@ -37,7 +37,8 @@ class FMOWSentinelTrainTransform(BaseTransform):
             SentinelNormalize(self.mean, self.std),
             transforms.ToTensor(),
             transforms.RandomResizedCrop(self.input_size, scale=(0.2, 1.0),
-                                         interpolation=transforms.InterpolationMode.BICUBIC),
+                                         interpolation=transforms.InterpolationMode.BICUBIC,
+                                         antialias=True),
             transforms.RandomHorizontalFlip()
         ])
 
@@ -59,7 +60,7 @@ class FMOWSentinelEvalTransform(BaseTransform):
             SentinelNormalize(self.mean, self.std),
             # ToTensor's behavior is really strange
             transforms.ToTensor(),
-            transforms.Resize(temp_size, interpolation=transforms.InterpolationMode.BICUBIC),
+            transforms.Resize(temp_size, interpolation=transforms.InterpolationMode.BICUBIC, antialias=True),
             transforms.CenterCrop(self.input_size)
         ])
 

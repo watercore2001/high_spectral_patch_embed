@@ -68,7 +68,3 @@ def main():
                                     masked_bands=None,
                                     dropped_bands=[0,9,10],
                                     dataloader_args = DataloaderArgs(batch_size=4, num_workers=0, pin_memory=True, shuffle=False))
-    sample0 = dataset[0]
-    x = sample0["x"]
-    y = sample0["y"]
-    print(x.shape, x.min(), x.max(), x.mean(), x.std())

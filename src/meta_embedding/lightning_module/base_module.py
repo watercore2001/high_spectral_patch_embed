@@ -68,8 +68,10 @@ class BaseModule(LightningModule):
                 {'params': no_decay_param, 'weight_decay': 0}]
 
     def configure_optimizers(self):
-        params = self.get_param_groups()
-
+        if hasattr(self.encoder, "no_weight_decay_keywords"):
+            params = self.get_param_groups()
+        else:
+            params = self.parameters()
         optimizer = optim.AdamW(params=params, lr=self.optim_args.max_lr, weight_decay=self.optim_args.weight_decay)
         lr_scheduler = CosineAnnealingWithWarmup(optimizer=optimizer, warmup_epochs=self.optim_args.warmup_epochs,
                                                  annealing_epochs=self.optim_args.annealing_epochs,
