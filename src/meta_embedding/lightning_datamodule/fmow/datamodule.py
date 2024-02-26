@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import dataclasses
 from meta_embedding.lightning_datamodule.fmow.dataset import FMOWSentinelDataset
 
+
 @dataclasses.dataclass
 class DataloaderArgs:
     batch_size: int
@@ -15,16 +16,19 @@ class DataloaderArgs:
     # if the last batch size == 1, UperNet will crash because batch normalization
     drop_last: bool = True
 
+
 class FMOWSentinelDataModule(LightningDataModule):
     def __init__(self,
                  root_path: str,
                  input_size: int,
+                 train_percent: float,
                  masked_bands: list[int] | None,
                  dropped_bands: list[int] | None,
                  dataloader_args: DataloaderArgs):
         super().__init__()
         self.root_path = root_path
         self.input_size = input_size
+        self.train_percent = train_percent
         self.masked_bands = masked_bands
         self.dropped_bands = dropped_bands
         self.dataloader_args = dataloader_args
@@ -37,10 +41,17 @@ class FMOWSentinelDataModule(LightningDataModule):
     def make_dataset(self, stage_name: Literal["train", "val", "test_gt"]):
         stage_sentinel_folders = os.path.join(self.root_path, "fmow-sentinel", stage_name)
         csv_path = os.path.join(self.root_path, f"{stage_name}.csv")
+        if stage_name == "train":
+            is_train = True
+            choice_percent = self.train_percent
+        else:
+            is_train = False
+            choice_percent = 1
         return FMOWSentinelDataset(sentinel_root_path=stage_sentinel_folders,
                                    csv_path = csv_path,
                                    input_size = self.input_size,
-                                   is_train = (stage_name=="train"),
+                                   choice_percent = choice_percent,
+                                   is_train = is_train,
                                    masked_bands = self.masked_bands,
                                    dropped_bands = self.dropped_bands)
 
@@ -58,7 +69,7 @@ class FMOWSentinelDataModule(LightningDataModule):
         dataloader_args = dataclasses.replace(self.dataloader_args, shuffle=False)
         return DataLoader(self.val_dataset, **dataclasses.asdict(dataloader_args))
 
-    def predict_dataloader(self):
+    def test_dataloader(self):
         dataloader_args = dataclasses.replace(self.dataloader_args, shuffle=False)
         return DataLoader(self.test_dataset, **dataclasses.asdict(dataloader_args))
 

@@ -35,7 +35,7 @@ class FMOWSentinelDataset(Dataset):
                  sentinel_root_path: str,
                  csv_path: str,
                  choice_percent: float,
-                 input_size : int,
+                 input_size: int,
                  is_train: bool,
                  masked_bands: list[int] | None,
                  dropped_bands: list[int] | None):
@@ -44,7 +44,7 @@ class FMOWSentinelDataset(Dataset):
         """
         self.sentinel_root_path = sentinel_root_path
         self.df = pd.read_csv(csv_path).sort_values(["category", "location_id", "timestamp"])
-        self.indices = self.random_choose_indices(choice_percent)
+        self.indexes = self.random_choose_indexes(choice_percent)
 
         if is_train:
             self.image_transform = FMOWSentinelTrainTransform(self.mean, self.std, input_size)
@@ -55,17 +55,18 @@ class FMOWSentinelDataset(Dataset):
         self.dropped_bands = dropped_bands
 
     def __len__(self):
-        return len(self.df)
+        return len(self.indexes)
 
-    def random_choose_indices(self, choice_percent: float) -> np.ndarray:
-        indexes = np.array([])  # Empty numpy array to store the indexes
+    def random_choose_indexes(self, choice_percent: float) -> np.ndarray:
+        indexes = np.array([]).astype(int)  # Empty numpy array to store the indexes
 
-        for value in self.df['category'].unique():
+        for value in self.categories:
             category_rows = self.df[self.df['category'] == value]  # Get rows belonging to a specific category
-            rows_to_select = int(len(category_rows) * 0.1)  # Calculate 10% of the rows for selection
+            rows_to_select = int(len(category_rows) * choice_percent)  # Calculate of the rows for selection
             selected_indexes = np.random.choice(category_rows.index, size=rows_to_select,
                                                 replace=False)  # Randomly select indexes
             indexes = np.concatenate((indexes, selected_indexes))  # Append selected indexes to the numpy array
+        return indexes
 
     def get_image_path(self, index: int) -> str:
         row = self.df.iloc[index]
@@ -92,25 +93,30 @@ class FMOWSentinelDataset(Dataset):
             result = result[keep_indexes, :, :]
         return result
 
-
     def __getitem__(self, index):
-        x = self.get_x(self.get_image_path(index))
-        y = self.categories.index(self.df.iloc[index]["category"])
+        real_index = self.indexes[index]
+        x = self.get_x(self.get_image_path(real_index))
+        y = self.categories.index(self.df.iloc[real_index]["category"])
 
-        result = {"x": x, "y": y,}
+        result = {"x": x, "y": y}
         return result
 
 def main():
-    dataset = FMOWSentinelDataset(sentinel_root_path="/mnt/disk/xials/dataset/fmow/fmow-sentinel/val",
+    dataset1 = FMOWSentinelDataset(sentinel_root_path="/mnt/disk/xials/dataset/fmow/fmow-sentinel/val",
                                   csv_path="/mnt/disk/xials/dataset/fmow/val.csv",
                                   input_size=96,
+                                  choice_percent=0.1,
                                   is_train=False,
                                   masked_bands=None,
                                   dropped_bands=[0,9,10])
-    sample0 = dataset[0]
-    x = sample0["x"]
-    y = sample0["y"]
-    print(x.shape, x.min(), x.max(), x.mean(), x.std())
+    dataset2 = FMOWSentinelDataset(sentinel_root_path="/mnt/disk/xials/dataset/fmow/fmow-sentinel/val",
+                                  csv_path="/mnt/disk/xials/dataset/fmow/val.csv",
+                                  input_size=96,
+                                  choice_percent=1,
+                                  is_train=False,
+                                  masked_bands=None,
+                                  dropped_bands=[0,9,10])
+    print(len(dataset1), len(dataset2))
 
 if __name__ == "__main__":
     main()
