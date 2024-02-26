@@ -4,6 +4,8 @@ from torchmetrics import MetricCollection, Accuracy, Precision, Recall, F1Score,
 
 def generate_classification_metric(num_classes: int, ignore_index: int = None) -> tuple:
     metric_classes = [Accuracy, JaccardIndex, Precision, Recall, F1Score]
+    top_ks = [1, 5]
+
     global_metric_dict = {}
     classes_metric_dict = {}
 
@@ -18,6 +20,14 @@ def generate_classification_metric(num_classes: int, ignore_index: int = None) -
         key = f"{metric.__name__.lower()}_class"
         classes_metric_dict[key] = metric(task="multiclass", average="none", num_classes=num_classes,
                                           ignore_index=ignore_index)
+
+    # add top-5 accuracy
+    global_metric_dict[f"{Accuracy.__name__.lower()}_top5_micro"] = Accuracy(task="multiclass", average="micro",
+                                                                             top_k=5, num_classes=num_classes,
+                                                                             ignore_index=ignore_index)
+    global_metric_dict[f"{Accuracy.__name__.lower()}_top5_macro"] = Accuracy(task="multiclass", average="macro",
+                                                                             top_k=5, num_classes=num_classes,
+                                                                             ignore_index=ignore_index)
 
     # add kappa
     global_metric_dict[f"{CohenKappa.__name__.lower()}"] = CohenKappa(task="multiclass", num_classes=num_classes,

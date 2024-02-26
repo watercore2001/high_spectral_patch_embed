@@ -1,0 +1,38 @@
+seed_everything: 0
+
+data:
+  train_percent: 1
+  dataloader_args:
+    batch_size: 128
+
+model:
+  class_path: meta_embedding.lightning_module.SatMIMPreTrainingModule
+  init_args:
+    encoder:
+      class_path: meta_embedding.model.encoder.MetaViTForSatMIMBase
+      init_args:
+        in_chans: 10
+        patch_size: 8
+        img_size: 96
+        drop_path_rate: 0.2
+        global_pool: "avg"
+    optim_args:
+      weight_decay: 0.05
+      warmup_epochs: 10
+      annealing_epochs: 90
+      max_lr: 1e-4
+      min_lr: 1e-5
+    image_size: 96
+    channels: 10
+    mask_patch_size: 8
+    model_patch_size: 8
+    mask_ratio: 0.9
+
+trainer: ../share/satmim.yaml
+
+used_ckpt_for_test: "no"
+used_ckpt_for_predict: "no"
+
+wandb_logger:
+  project: satmim
+  name: vit_meta_base_size8_ratio0.9_per1
