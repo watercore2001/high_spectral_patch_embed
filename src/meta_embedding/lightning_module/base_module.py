@@ -38,7 +38,7 @@ class BaseModule(LightningModule):
         return y_hat
 
     def get_param_groups(self):
-        """ Split params into two groups according to encoder.no_weight_decay_keywords()
+        """ Split params into two groups according to encoder.no_weight_decay()
         :return: List of groups with weight decay and without weight decay
         """
         def check_keywords_in_name(name_: str, skip_keywords_: set[str]):
@@ -47,7 +47,7 @@ class BaseModule(LightningModule):
                     return True
             return False
 
-        skip_keywords = self.encoder.no_weight_decay_keywords()
+        skip_keywords = self.encoder.no_weight_decay()
 
         has_decay_param = []
         no_decay_param = []
@@ -68,10 +68,11 @@ class BaseModule(LightningModule):
                 {'params': no_decay_param, 'weight_decay': 0}]
 
     def configure_optimizers(self):
-        if hasattr(self.encoder, "no_weight_decay_keywords"):
+        if hasattr(self.encoder, "no_weight_decay"):
             params = self.get_param_groups()
         else:
             params = self.parameters()
+        print(params)
         optimizer = optim.AdamW(params=params, lr=self.optim_args.max_lr, weight_decay=self.optim_args.weight_decay)
         lr_scheduler = CosineAnnealingWithWarmup(optimizer=optimizer, warmup_epochs=self.optim_args.warmup_epochs,
                                                  annealing_epochs=self.optim_args.annealing_epochs,
