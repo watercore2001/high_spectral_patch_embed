@@ -24,7 +24,7 @@ class MetaVisionTransformerForSatMIM(MetaVisionTransformer):
         # recovery size
         self.recovery_header = nn.Linear(embed_dim, in_chans * self.patch_size ** 2)
 
-    def forward_recovery(self, x, mask) -> torch.Tensor:
+    def forward_features(self, x, mask):
         b, c, h, w = x.shape
         # ---------- 1. patch embedding for each channel -----------
         x = torch.split(x, split_size_or_sections=1, dim=1)
@@ -32,9 +32,10 @@ class MetaVisionTransformerForSatMIM(MetaVisionTransformer):
         new_h, new_w = h // self.patch_size, w // self.patch_size
         x = rearrange(x, pattern="c b l d -> b c l d")
         # ---------- 2. add mask -----------
-        mask = rearrange(mask, pattern="b c new_h new_w -> b c (new_h new_w) 1")
-        mask_tokens = repeat(self.mask_tokens, pattern="c d -> b c (new_h new_w) d", b=b, new_h=new_h, new_w=new_w)
-        x = x * (1 - mask) + mask_tokens * mask
+        if mask != None:
+            mask = rearrange(mask, pattern="b c new_h new_w -> b c (new_h new_w) 1")
+            mask_tokens = repeat(self.mask_tokens, pattern="c d -> b c (new_h new_w) d", b=b, new_h=new_h, new_w=new_w)
+            x = x * (1 - mask) + mask_tokens * mask
         # ---------- 3. fusion all channels -----------
         x = rearrange(x, pattern="b c l d -> b l (c d)")
         x = self.fusion_channels(x)
@@ -45,20 +46,29 @@ class MetaVisionTransformerForSatMIM(MetaVisionTransformer):
         x = self.norm_pre(x)
         x = self.blocks(x)
         x = self.norm(x)
-        # ---------- 5. recovery -----------
-        x = x[:, 1:, :]
-        x = self.recovery_header(x)
-        x = rearrange(x, "b (new_h new_w) (c patch_size_h patch_size_w) -> "
-                         "b c (new_h patch_size_h) (new_w patch_size_w)",
-                      patch_size_h=self.patch_size, patch_size_w=self.patch_size,
-                      new_h=new_h, new_w=new_w)
         return x
 
-    def forward(self, batch, is_pretrain: bool):
+    def forward(self, batch, is_pretrain: bool, is_classify: bool):
+        b, c, h, w = batch["x"].shape
+        new_h, new_w = h // self.patch_size, w // self.patch_size
+
         if is_pretrain:
-            return self.forward_recovery(batch["x"], batch["mask"])
+            x = self.forward_features(batch["x"], batch["mask"])
+            x = x[:, 1:, :]
+            x = self.recovery_header(x)
+            x = rearrange(x, "b (new_h new_w) (c patch_size_h patch_size_w) -> "
+                             "b c (new_h patch_size_h) (new_w patch_size_w)",
+                          patch_size_h=self.patch_size, patch_size_w=self.patch_size,
+                          new_h=new_h, new_w=new_w)
+            return x
+        elif is_classify:
+            x = self.forward_features(batch["x"], batch["mask"])
+            x = self.forward_head(x)
+            return [x]
         else:
-            return [self.forward_features(batch["x"])]
+            x = self.forward_features(batch["x"], batch["mask"])
+            x = rearrange(x, "b (new_h new_w) c -> b c new_h new_w", new_h=new_h, new_w=new_w)
+            return [x]
 
 
 class MetaViTForSatMIMBase(MetaVisionTransformerForSatMIM):
