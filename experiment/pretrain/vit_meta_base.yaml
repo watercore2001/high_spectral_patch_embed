@@ -11,10 +11,11 @@ model:
     encoder:
       class_path: meta_embedding.model.encoder.MetaViTForSatMIMBase
       init_args:
+        # the reconstruction task is very hard,
+        # so there's no over-fitting during pretraining, we don't need dropout in pretrain
         in_chans: 10
         patch_size: 8
         img_size: 96
-        drop_path_rate: 0.2
         global_pool: "avg"
     optim_args:
       weight_decay: 0.05
@@ -26,7 +27,7 @@ model:
     channels: 10
     mask_patch_size: 8
     model_patch_size: 8
-    mask_ratio: 0.9
+    mask_ratio: 0.8
 
 trainer: ../share/satmim.yaml
 
@@ -35,4 +36,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: satmim
-  name: vit_meta_base_size8_ratio0.9_per1
+  name: vit_meta_base_size8_ratio0.8
