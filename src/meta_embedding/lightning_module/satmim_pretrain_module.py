@@ -88,8 +88,6 @@ class SatMIMPreTrainingModule(BaseModule):
         return None
 
 
-
-
 class MaskGenerator:
     def __init__(self, image_size: int, channels: int, mask_patch_size: int, model_patch_size: int, mask_ratio: float):
         self.image_size = image_size
