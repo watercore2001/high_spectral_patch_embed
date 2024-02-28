@@ -15,4 +15,4 @@ callbacks:
     init_args:
       monitor: val_accuracy_micro
       mode: max
-      patience: 20
+      patience: 10
