@@ -21,19 +21,19 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
     """
     def __init__(self, channel_embed=256, channel_groups=((0, 1, 2, 6), (3, 4, 5, 7), (8, 9)), **kwargs):
         super().__init__(**kwargs)
-        img_size = kwargs['img_size']
-        patch_size = kwargs['patch_size']
-        embed_dim = kwargs['embed_dim']
+        self.img_size = kwargs['img_size']
+        self.patch_size = kwargs['patch_size']
+        self.embed_dim = kwargs['embed_dim']
 
         self.channel_groups = channel_groups
 
-        self.patch_embed = nn.ModuleList([PatchEmbed(img_size, patch_size, len(group), embed_dim)
+        self.patch_embed = nn.ModuleList([PatchEmbed(self.img_size, self.patch_size, len(group), self.embed_dim)
                                           for group in channel_groups])
         # self.patch_embed = PatchEmbed(img_size, patch_size, 1, embed_dim)
         num_patches = self.patch_embed[0].num_patches
 
         # Positional and channel embed
-        self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, embed_dim - channel_embed))
+        self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, self.embed_dim - channel_embed))
         pos_embed = get_2d_sincos_pos_embed(self.pos_embed.shape[-1], int(num_patches ** .5), cls_token=True)
         self.pos_embed.data.copy_(torch.from_numpy(pos_embed).float().unsqueeze(0))
 
@@ -47,9 +47,14 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
         channel_cls_embed = torch.zeros((1, channel_embed))
         self.channel_cls_embed.data.copy_(channel_cls_embed.float().unsqueeze(0))
 
-    def forward_features(self, x):
+        self.init_weights()
+
+    @torch.jit.ignore
+    def no_weight_decay(self) :
+        return {'channel_embed', 'channel_cls_embed'}.union(super().no_weight_decay())
+
+    def forward_before_mask(self, x):
         # ---------- start 1. patch embed -----------
-        b, c, h, w = x.shape
         x_c_embed = []
         for i, group in enumerate(self.channel_groups):
             x_c = x[:, group, :, :]
@@ -58,7 +63,6 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
         x = torch.stack(x_c_embed, dim=1)  # (N, G, L, D)
         # ---------- end 1. patch embed -----------
 
-        # ---------- start 2. pos embedding -----------
         _, G, L, D = x.shape
 
         # add channel embed
@@ -72,8 +76,10 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
 
         # add pos embed w/o cls token
         x = x + pos_channel  # (N, G, L, D)
-        x = x.view(b, -1, D)  # (N, G*L, D)
+        return x
 
+    def forward_after_mask(self, x):
+        b, _, _ = x.shape
         cls_pos_channel = torch.cat((self.pos_embed[:, :1, :], self.channel_cls_embed), dim=-1)  # (1, 1, D)
         # stole cls_tokens impl from Phil Wang, thanks
         cls_tokens = cls_pos_channel + self.cls_token.expand(b, -1, -1)
@@ -87,6 +93,13 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
         x = self.norm_pre(x)
         x = self.blocks(x)
         x = self.norm(x)
+        return x
+
+    def forward_features(self, x):
+        x = self.forward_before_mask(x)
+        b, G, L, D = x.shape
+        x = x.view(b, -1, D)  # (N, G*L, D)
+        x = self.forward_after_mask(x)
 
         return x
 

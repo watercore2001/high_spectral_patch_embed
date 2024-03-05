@@ -11,7 +11,6 @@ from functools import partial
 import torch
 from torch import nn
 import timm.models.vision_transformer
-from .pos_embed import get_2d_sincos_pos_embed
 
 __all__ = ["ViTBase", "ViTLarge"]
 

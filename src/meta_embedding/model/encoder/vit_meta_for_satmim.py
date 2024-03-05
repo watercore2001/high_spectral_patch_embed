@@ -3,6 +3,7 @@ from einops import rearrange, repeat
 import torch
 from torch import nn
 from timm.models.layers import trunc_normal_
+from timm.models.vision_transformer import init_weights_vit_timm
 
 from .vit_meta import MetaVisionTransformer
 
@@ -23,6 +24,7 @@ class MetaVisionTransformerForSatMIM(MetaVisionTransformer):
 
         # recovery size
         self.recovery_header = nn.Linear(embed_dim, in_chans * self.patch_size ** 2)
+        init_weights_vit_timm(self.recovery_header)
 
     def forward_features(self, x, mask):
         b, c, h, w = x.shape

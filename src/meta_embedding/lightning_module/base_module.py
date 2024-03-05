@@ -63,6 +63,7 @@ class BaseModule(LightningModule):
             else:
                 has_decay_param.append(param)
                 has_decay_name.append(name)
+        print("no_decay_params:", no_decay_name)
 
         return [{'params': has_decay_param},
                 {'params': no_decay_param, 'weight_decay': 0}]
@@ -72,7 +73,7 @@ class BaseModule(LightningModule):
             params = self.get_param_groups()
         else:
             params = self.parameters()
-        print(params)
+
         optimizer = optim.AdamW(params=params, lr=self.optim_args.max_lr, weight_decay=self.optim_args.weight_decay)
         lr_scheduler = CosineAnnealingWithWarmup(optimizer=optimizer, warmup_epochs=self.optim_args.warmup_epochs,
                                                  annealing_epochs=self.optim_args.annealing_epochs,

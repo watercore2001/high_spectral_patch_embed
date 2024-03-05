@@ -3,7 +3,7 @@ accelerator: gpu
 logger: True
 # debug mode
 # fast_dev_run: True
-max_epochs: 200
+max_epochs: 50
 callbacks:
   - class_path: pytorch_lightning.callbacks.ModelCheckpoint
     init_args:
