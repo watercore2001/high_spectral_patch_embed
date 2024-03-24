@@ -2,7 +2,7 @@ from functools import partial
 from einops import rearrange, repeat
 import torch
 from torch import nn
-from timm.models.vision_transformer import PatchEmbed
+from timm.layers import PatchEmbed
 from timm.models.vision_transformer import VisionTransformer, init_weights_vit_timm
 
 __all__ = ["MetaViTBase", "MetaViTLarge"]
@@ -15,17 +15,16 @@ class MetaVisionTransformer(VisionTransformer):
         super().__init__(**kwargs)
         del self.patch_embed
         img_size = kwargs["img_size"]
-        in_chans = kwargs["in_chans"]
+        self.in_chans = kwargs["in_chans"]
         embed_dim = kwargs["embed_dim"]
         self.patch_size = kwargs["patch_size"]
         self.patch_embeds = nn.ModuleList([
             PatchEmbed(img_size=img_size, patch_size=self.patch_size, in_chans=1, embed_dim=embed_dim)
-            for _ in range(in_chans)
+            for _ in range(self.in_chans)
         ])
-        self.fusion_channels = nn.Linear(in_features=in_chans*embed_dim,
+        self.fusion_channels = nn.Linear(in_features=self.in_chans*embed_dim,
                                          out_features=embed_dim)
-        init_weights_vit_timm(self.patch_embeds)
-        init_weights_vit_timm(self.fusion_channels)
+        self.init_weights()
 
     def forward_features(self, x):
         # ---------- meta patch embed -----------

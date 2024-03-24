@@ -18,9 +18,9 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
     """ Masked Autoencoder with VisionTransformer backbone
     """
 
-    def __init__(self, mask_ratio: float, spatial_mask: bool,
-                 decoder_embed_dim: int, decoder_depth: int,
+    def __init__(self, decoder_embed_dim: int, decoder_depth: int,
                  decoder_channel_embed: int=128, decoder_num_heads:int=16, decoder_mlp_ratio:float=4,
+                 mask_ratio: float = None, spatial_mask: bool = None,
                  **kwargs):
         super().__init__(**kwargs)
         # Mask Strategy
@@ -34,7 +34,8 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
         num_patches = self.patch_embed[0].num_patches
         num_groups = len(self.channel_groups)
         # add pos embed in decoder
-        self.decoder_pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, decoder_embed_dim - decoder_channel_embed))
+        self.decoder_pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, decoder_embed_dim - decoder_channel_embed),
+                                              requires_grad=False)
         decoder_pos_embed = get_2d_sincos_pos_embed(self.decoder_pos_embed.shape[-1],
                                                     int(self.patch_embed[0].num_patches ** .5), cls_token=True)
         self.decoder_pos_embed.data.copy_(torch.from_numpy(decoder_pos_embed).float().unsqueeze(0))
@@ -57,6 +58,10 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
         # --------------------------------------------------------------------------
 
         self.init_weights()
+
+    @torch.jit.ignore
+    def no_weight_decay(self):
+        return {'decoder_pos_embed', 'decoder_channel_embed'}.union(super().no_weight_decay())
 
     def random_masking(self, x, mask_ratio):
         """
@@ -86,7 +91,6 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
         return x_masked, mask, ids_restore
 
     def forward_encoder(self, x, mask_ratio):
-
         x = self.forward_before_mask(x)
         b, G, L, D = x.shape
         # ---------------------add mask
@@ -138,6 +142,8 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
             x_ = torch.gather(x_, dim=1, index=ids_restore.unsqueeze(-1).repeat(1, 1, x.shape[2]))  # unshuffle
             x = torch.cat([x[:, :1, :], x_], dim=1)  # append cls token  (N, 1 + c*L, D)
 
+        # test my code
+        # self.test_result_mask(x, result_mask)
 
         # apply Transformer blocks
         for blk in self.decoder_blocks:
@@ -167,11 +173,47 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
         x = rearrange(x, "b c (h w) (p1 p2) -> b c (h p1) (w p2)", h=h,w=w,p1=p,p2=p)
         return x
 
+    def test_result_mask(self, x, result_mask):
+        # remove cls token
+        x = x[:, 1:, :]
+
+        # Separate channel axis
+        G = 3
+        N, GL, D = x.shape
+        x = x.view(N, G, GL // G, D)
+
+
+        # predictor projection
+        import numpy as np
+        x = x.detach().numpy()
+        mask_positions = np.all(x == np.array(self.mask_token.detach().numpy()[0,0,:]), axis=-1) # b, g, l
+        print(mask_positions)
+        from einops import reduce
+        result_mask = reduce(result_mask, "b c (h p1) (w p2) -> b c h w", "mean",
+                             p1=self.patch_size, p2=self.patch_size)
+        result_mask = rearrange(result_mask, "b c h w -> b c (h w)")
+
+
+        for idx in np.argwhere(mask_positions):
+            print(idx)
+            b, g, l = idx[0], idx[1], idx[2]
+            assert torch.all(result_mask[b, list(self.channel_groups[g]), l] == 1).item()
+        for idx in np.argwhere(np.logical_not(mask_positions)):
+            print(idx)
+            b, g, l = idx[0], idx[1], idx[2]
+            assert torch.all(result_mask[b, list(self.channel_groups[g]), l] == 0).item()
+        print("celebrate right mask")
+
+
     def forward(self, batch, is_pretrain: bool, is_classify: bool=None):
         if is_pretrain:
             latent, mask, ids_restore = self.forward_encoder(batch["x"], self.mask_ratio)
             pred = self.forward_decoder(latent, ids_restore)  # [N, C, L, p*p]
             return pred, mask
+        elif is_classify:
+            x = self.forward_features(batch["x"])
+            x = self.forward_head(x)
+            return [x]
 
 
 class GroupViTForMaeBaseDec512D1(GroupChannelViTForMae):
@@ -180,11 +222,3 @@ class GroupViTForMaeBaseDec512D1(GroupChannelViTForMae):
                          norm_layer=partial(nn.LayerNorm, eps=1e-6),
                          decoder_channel_embed=128, decoder_embed_dim=512, decoder_depth=1, decoder_num_heads=16,
                          **kwargs)
-
-
-def mae_vit_large_patch16_dec512d8b(**kwargs):
-    model = GroupChannelViTForMae(
-        channel_embed=256, embed_dim=1024, depth=24, num_heads=16,
-        decoder_channel_embed=128, decoder_embed_dim=512, decoder_depth=8, decoder_num_heads=16,
-        mlp_ratio=4, norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)
-    return model

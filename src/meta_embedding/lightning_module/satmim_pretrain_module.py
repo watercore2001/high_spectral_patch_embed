@@ -23,18 +23,17 @@ class SatMIMPreTrainingModule(BaseModule):
         # calculate loss
         all_loss, mask = self(batch)
         loss_mask = (mask == 1)
-        masked_loss = (all_loss * loss_mask).sum() / loss_mask.sum()
-        self.log(name="train_mask_loss", value=masked_loss, on_step=True, sync_dist=True)
+        mask_loss = (all_loss * loss_mask).sum() / loss_mask.sum()
+        self.log(name="train_mask_loss", value=mask_loss, on_step=True, sync_dist=True)
 
         # use masked loss for gradient descent
-        return masked_loss
+        return mask_loss
 
     def validation_step(self, batch: dict, batch_index: int):
         all_loss, mask = self(batch)
         loss_mask = (mask == 1)
         mask_loss = (all_loss * loss_mask).sum() / loss_mask.sum()
         self.log(name="val_mask_loss", value=mask_loss, on_step=True, sync_dist=True)
-        self.log(name="val_global_loss", value=all_loss.mean(), on_epoch=True, sync_dist=True)
 
     def predict_step(self, batch: dict, batch_idx: int, dataloader_idx: int = 0) -> Any:
         def get_output_path(tif_path_):

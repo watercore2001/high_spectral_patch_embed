@@ -3,16 +3,15 @@ seed_everything: 0
 data:
   train_percent: 1
   dataloader_args:
-    batch_size: 128
+    batch_size: 256
 
 model:
   class_path: meta_embedding.lightning_module.ClassificationModule
   init_args:
     encoder:
-      class_path: meta_embedding.model.encoder.MetaViTBase
+      class_path: meta_embedding.model.encoder.MetaSwinBase
       init_args:
         in_chans: 10
-        patch_size: 8
         img_size: 96
         drop_rate: 0.2
         drop_path_rate: 0.2
@@ -36,4 +35,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: meta_embedding
-  name: vit_meta_base_per1
+  name: swin_meta_base_per1

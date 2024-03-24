@@ -4,21 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5bd075eb-3044-4712-89d9-b47099edff01" name="Changes" comment="Start unsupervised experiment">
-      <change afterPath="$PROJECT_DIR$/experiment/pretrain/vit_group_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/mask_generator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_group_channels_for_mae.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test.py" afterDir="false" />
+    <list default="true" id="5bd075eb-3044-4712-89d9-b47099edff01" name="Changes" comment="Finish group satmae">
+      <change afterPath="$PROJECT_DIR$/experiment/classification/swin_base.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment/classification/swin_meta_base.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment/finetuning/vit_group_base_fmow.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment/finetuning/vit_meta_base_mae_fmow.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment/pretrain/vit_meta_base_mae.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/swint_meta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_meta_for_mae.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_meta_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/share/satmim.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/share/pretrain.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/lightning_module/base_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/lightning_module/base_module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/classification/vit_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/classification/vit_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/classification/vit_group_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/classification/vit_group_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/classification/vit_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/classification/vit_meta_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/finetuning/vit_meta_base_fmow.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/finetuning/vit_meta_base_mim_fmow.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_meta_base_mim.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/share/pretrain.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/share/pretrain.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/meta_embedding/lightning_module/satmim_pretrain_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/lightning_module/satmim_pretrain_module.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/mae_vit_group_channels.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/swint.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/swint.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_group_channels.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_group_channels.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_meta_for_embed_satmim.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_meta_for_satmim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_group_channels_for_mae.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_group_channels_for_mae.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_meta.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/model/encoder/vit_meta.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,36 +41,47 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/.cache/JetBrains/PyCharm2023.3/remote_sources/755909892/-171921879/timm/layers/classifier.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cache/JetBrains/PyCharm2023.3/remote_sources/755909892/-171921879/timm/layers/patch_embed.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.cache/JetBrains/PyCharm2023.3/remote_sources/755909892/-171921879/timm/models/swin_transformer.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2d07czGUqmczQBI67C026Xq4OXU" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.test.executor": "Debug",
-    "Python.trainer.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/mnt/code/deep_learning/high_spectral_patch_embed/src/meta_embedding/trainer.py",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.sync",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.trainer.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/mnt/code/deep_learning/high_spectral_patch_embed/experiment/classification&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Color Scheme Font&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/experiment/classification" />
+      <recent name="$PROJECT_DIR$/experiment/finetuning" />
+      <recent name="$PROJECT_DIR$/experiment/pretrain" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/experiment/classification" />
       <recent name="$PROJECT_DIR$/src/meta_embedding/model/encoder" />
     </key>
   </component>
@@ -124,9 +141,30 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1709133225335</updated>
-      <workItem from="1709133226403" duration="29512000" />
+      <workItem from="1709133226403" duration="43017000" />
+      <workItem from="1709952672724" duration="11784000" />
+      <workItem from="1710332984906" duration="1923000" />
+      <workItem from="1710337053969" duration="602000" />
+      <workItem from="1710338086142" duration="9043000" />
+      <workItem from="1710653901654" duration="605000" />
+      <workItem from="1710731094672" duration="3012000" />
+      <workItem from="1710821373228" duration="2845000" />
+      <workItem from="1710831429541" duration="164000" />
+      <workItem from="1710831618946" duration="670000" />
+      <workItem from="1710928014984" duration="1986000" />
+      <workItem from="1710948489296" duration="2398000" />
+      <workItem from="1710989629371" duration="627000" />
+      <workItem from="1711035766263" duration="7812000" />
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Finish group satmae">
+      <option name="closed" value="true" />
+      <created>1709617034515</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1709617034515</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,10 +184,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fix .idea folder" />
     <MESSAGE value="Start unsupervised experiment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Start unsupervised experiment" />
+    <MESSAGE value="Finish group satmae" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finish group satmae" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/high_spectral_patch_embed$trainer.coverage" NAME="trainer Coverage Results" MODIFIED="1709616876857" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/high_spectral_patch_embed$test.coverage" NAME="test Coverage Results" MODIFIED="1709285176565" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/high_spectral_patch_embed$trainer.coverage" NAME="trainer Coverage Results" MODIFIED="1709706054952" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/high_spectral_patch_embed$test.coverage" NAME="test Coverage Results" MODIFIED="1709701937585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/meta_embedding/model/encoder" />
   </component>
 </project>

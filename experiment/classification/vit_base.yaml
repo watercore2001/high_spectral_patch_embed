@@ -1,7 +1,7 @@
 seed_everything: 0
 
 data:
-  train_percent: 0.1
+  train_percent: 1
   dataloader_args:
     batch_size: 256
 
@@ -14,6 +14,7 @@ model:
         in_chans: 10
         patch_size: 8
         img_size: 96
+        drop_rate: 0.2
         drop_path_rate: 0.2
         global_pool: "avg"
     header:
@@ -28,11 +29,11 @@ model:
       max_lr: 1e-4
       min_lr: 1e-5
 
-trainer: trainer.yaml
+trainer: ../share/trainer.yaml
 
 used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: meta_embedding
-  name: vit_base
+  name: vit_base_pre1
