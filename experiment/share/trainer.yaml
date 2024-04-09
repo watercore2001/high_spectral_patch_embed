@@ -1,9 +1,8 @@
 default_root_dir: "/mnt/disk/xials/workspace/"
 accelerator: gpu
 logger: True
-# debug mode
-# fast_dev_run: True
-max_epochs: 200
+# fast_dev_run: True # debug mode
+max_epochs: 100
 callbacks:
   - class_path: pytorch_lightning.callbacks.ModelCheckpoint
     init_args:

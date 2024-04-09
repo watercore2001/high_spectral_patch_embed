@@ -4,11 +4,15 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.lightning_module.ClassificationModule
+  class_path: meta_embedding.lightning_module.SatMIMFineTuningModule
   init_args:
+    pretrain_ckpt_path: /mnt/disk/xials/workspace/satmim/vit_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0276.ckpt
+    is_classify: True
     encoder:
-      class_path: meta_embedding.model.encoder.MetaViTBase
+      class_path: meta_embedding.model.encoder.ViTForMaeBaseDec512D1
       init_args:
+        # the reconstruction task is very hard,
+        # so there's no over-fitting during pretraining, we don't need dropout in pretrain
         in_chans: 10
         patch_size: 8
         img_size: 96
@@ -24,8 +28,8 @@ model:
       weight_decay: 0.05
       warmup_epochs: 10
       annealing_epochs: 90
-      max_lr: 1e-3
-      min_lr: 1e-4
+      max_lr: 1e-4
+      min_lr: 1e-5
 
 trainer: ../share/trainer.yaml
 
@@ -34,4 +38,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: meta_embedding
-  name: vit_meta_base_per1
+  name: vit_dec512d1_epoch50_drop0.2

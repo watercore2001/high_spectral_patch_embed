@@ -11,8 +11,8 @@ class CosineAnnealingWithWarmup(LRScheduler):
         optimizer (Optimizer): Wrapped optimizer.
         warmup_epochs (int): Linear warmup step size. Default: 0.
         annealing_epochs (int): annealing steps
-        max_lr (float): First cycle's max learning rate. Default: 0.1.
-        min_lr (float): Min learning rate. Default: 0.001.
+        max_lr (float): First cycle's max learning rate.
+        min_lr (float): Min learning rate.
     """
 
     def __init__(self,

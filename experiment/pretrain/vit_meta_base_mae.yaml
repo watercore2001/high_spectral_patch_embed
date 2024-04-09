@@ -1,9 +1,10 @@
 seed_everything: 0
 
 data:
+  dropped_bands: [ 0, 9, 10 ]
   train_percent: 1
   dataloader_args:
-    batch_size: 128
+    batch_size: 64
 
 model:
   class_path: meta_embedding.lightning_module.SatMIMPreTrainingModule

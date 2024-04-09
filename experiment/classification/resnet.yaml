@@ -1,9 +1,7 @@
 seed_everything: 0
 
 data:
-  train_percent: 0.1
-  dataloader_args:
-    batch_size: 256
+  dropped_bands: [ 0, 9, 10 ]
 
 model:
   class_path: meta_embedding.lightning_module.ClassificationModule
@@ -21,8 +19,8 @@ model:
       weight_decay: 0.05
       warmup_epochs: 10
       annealing_epochs: 90
-      max_lr: 1e-4
-      min_lr: 1e-5
+      max_lr: 1e-3
+      min_lr: 1e-4
 
 trainer: trainer.yaml
 

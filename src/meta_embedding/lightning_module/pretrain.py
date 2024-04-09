@@ -2,7 +2,7 @@ import os.path
 from typing import Any
 from torch import nn
 from einops import repeat
-from .base_module import AdamWCosineOptimArgs, BaseModule
+from .base import BaseModule, AdamWCosineOptimArgs
 import numpy as np
 
 
@@ -20,7 +20,6 @@ class SatMIMPreTrainingModule(BaseModule):
         return all_loss, mask
 
     def training_step(self, batch: dict, batch_index: int):
-        # calculate loss
         all_loss, mask = self(batch)
         loss_mask = (mask == 1)
         mask_loss = (all_loss * loss_mask).sum() / loss_mask.sum()
