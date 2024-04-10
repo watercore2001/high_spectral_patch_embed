@@ -2,15 +2,16 @@ from functools import partial
 
 import torch
 import torch.nn as nn
-from typing import Literal
-from timm.models.vision_transformer import Block
-from .vit_meta import MetaVisionTransformer
-from timm.layers import trunc_normal_
 from einops import rearrange, repeat
+from timm.layers import trunc_normal_
+from timm.models.vision_transformer import Block
+
+from .vit_meta import MetaVisionTransformer
+
 
 class MetaViTForMae(MetaVisionTransformer):
     def __init__(self, decoder_embed_dim: int, decoder_depth: int,
-                 decoder_num_heads:int=16, decoder_mlp_ratio:float=4,
+                 decoder_num_heads: int = 16, decoder_mlp_ratio: float = 4,
                  mask_ratio: float = None,
                  **kwargs):
         super().__init__(**kwargs)
@@ -20,7 +21,7 @@ class MetaViTForMae(MetaVisionTransformer):
         self.mask_token = nn.Parameter(torch.zeros(1, 1, decoder_embed_dim))
         num_patches = self.patch_embeds[0].num_patches
         # add pos embed in decoder
-        self.decoder_pos_embed = nn.Parameter(torch.randn(1, 1+num_patches, decoder_embed_dim) * .02)
+        self.decoder_pos_embed = nn.Parameter(torch.randn(1, 1 + num_patches, decoder_embed_dim) * .02)
         trunc_normal_(self.decoder_pos_embed, std=.02)
         self.decoder_blocks = nn.ModuleList([
             Block(decoder_embed_dim, decoder_num_heads, decoder_mlp_ratio, qkv_bias=True,
@@ -29,7 +30,7 @@ class MetaViTForMae(MetaVisionTransformer):
 
         self.decoder_norm = nn.LayerNorm(decoder_embed_dim)
 
-        self.decoder_pred = nn.Linear(decoder_embed_dim, self.patch_size**2 * self.in_chans, bias=True)
+        self.decoder_pred = nn.Linear(decoder_embed_dim, self.patch_size ** 2 * self.in_chans, bias=True)
 
         self.init_weights()
 
@@ -120,11 +121,11 @@ class MetaViTForMae(MetaVisionTransformer):
         x = x[:, 1:, :]
 
         b, l, c_pp = x.shape
-        h=w=int(l**0.5)
-        x = rearrange(x, "b (h w) (c p1 p2) -> b c (h p1) (w p2)", h=h,w=w,p1=self.patch_size,p2=self.patch_size)
+        h = w = int(l ** 0.5)
+        x = rearrange(x, "b (h w) (c p1 p2) -> b c (h p1) (w p2)", h=h, w=w, p1=self.patch_size, p2=self.patch_size)
         return x
 
-    def forward(self, batch, is_pretrain: bool, is_classify: bool=None):
+    def forward(self, batch, is_pretrain: bool, is_classify: bool = None):
         if is_pretrain:
             latent, mask, ids_restore = self.forward_encoder(batch["x"], self.mask_ratio)
             pred = self.forward_decoder(latent, ids_restore)  # [N, C, L, p*p]
@@ -133,6 +134,7 @@ class MetaViTForMae(MetaVisionTransformer):
             x = self.forward_features(batch["x"])
             x = self.forward_head(x)
             return [x]
+
 
 class MetaViTForMaeBaseDec512D1(MetaViTForMae):
     def __init__(self, **kwargs):

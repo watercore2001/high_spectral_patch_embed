@@ -8,8 +8,8 @@
 
 from functools import partial
 
-from torch import nn
 import timm.models.vision_transformer
+from torch import nn
 
 __all__ = ["ViTBase", "ViTLarge"]
 
@@ -17,7 +17,8 @@ __all__ = ["ViTBase", "ViTLarge"]
 class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
     """ Vision Transformer with support for global average pooling
     """
-    def __init__(self,  **kwargs):
+
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def forward(self, batch):

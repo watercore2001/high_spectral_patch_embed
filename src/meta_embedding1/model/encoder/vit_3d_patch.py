@@ -6,18 +6,18 @@
 
 from functools import partial
 
+import timm.models.vision_transformer
 import torch
 import torch.nn as nn
-
-import timm.models.vision_transformer
 from timm.models.vision_transformer import PatchEmbed
+
 from .pos_embed import get_2d_sincos_pos_embed, get_1d_sincos_pos_embed_from_grid
 
 __all__ = ["ViT3dPatchBase", "ViT3dPatchLarge"]
 
 
 class Vit3dPatch(timm.models.vision_transformer.VisionTransformer):
-    def __init__(self, channel_embed=256, channel_unit: int=3, **kwargs):
+    def __init__(self, channel_embed=256, channel_unit: int = 3, **kwargs):
         super().__init__(**kwargs)
         self.channel_unit = channel_unit
         self.img_size = kwargs['img_size']
@@ -49,14 +49,14 @@ class Vit3dPatch(timm.models.vision_transformer.VisionTransformer):
         self.init_weights()
 
     @torch.jit.ignore
-    def no_weight_decay(self) :
+    def no_weight_decay(self):
         return {'channel_embed', 'channel_cls_embed'}.union(super().no_weight_decay())
 
     def forward_before_mask(self, x):
         # ---------- start 1. patch embed -----------
         x_c_embed = []
         for i in range(0, self.in_chans, self.channel_unit):
-            x_c = x[:, i:i+self.channel_unit, :, :]
+            x_c = x[:, i:i + self.channel_unit, :, :]
             x_c_embed.append(self.patch_embed(x_c))  # (N, L, D)
 
         x = torch.stack(x_c_embed, dim=1)  # (N, G, L, D)

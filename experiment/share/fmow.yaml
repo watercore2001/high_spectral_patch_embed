@@ -1,5 +1,5 @@
 data:
-  class_path: meta_embedding.lightning_datamodule.fmow.FMOWSentinelDataModule
+  class_path: meta_embedding.datamodules.fmow.FMOWSentinelDataModule
   init_args:
     root_path: "/mnt/disk/xials/dataset/fmow"
     input_size: 96
