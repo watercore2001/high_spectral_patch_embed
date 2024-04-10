@@ -4,7 +4,7 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.lightning_module.ClassificationModule
+  class_path: meta_embedding.module.ClassificationModule
   init_args:
     encoder:
       class_path: meta_embedding.model.encoder.MetaSwinBase
@@ -32,5 +32,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: meta_embedding
-  name: swin_meta_base_per1
+  project: my_embedding
+  name: swin_meta_base

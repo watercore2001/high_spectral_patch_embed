@@ -1,11 +1,13 @@
 import timm.models.swin_transformer
 
+
 class SwinTransformer(timm.models.swin_transformer.SwinTransformer):
-    def __init__(self,  **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def forward(self, batch):
         return [super().forward(batch["x"])]
+
 
 class SwinBase(SwinTransformer):
     def __init__(self, **kwargs):

@@ -1,9 +1,9 @@
-from einops import repeat, rearrange
-import torch
 import numpy as np
+import torch
+from einops import repeat
 
 
-def mask_in_group(groups: int, image_size: int, mask_unit:int, mask_ratio:float):
+def mask_in_group(groups: int, image_size: int, mask_unit: int, mask_ratio: float):
     mask_unit_num_one_side = image_size // mask_unit
     patch_num = groups * mask_unit_num_one_side ** 2
     mask_num = int(np.ceil(patch_num * mask_ratio))
@@ -15,7 +15,7 @@ def mask_in_group(groups: int, image_size: int, mask_unit:int, mask_ratio:float)
     mask = repeat(mask, pattern="(c h w) -> c h w",
                   c=groups,
                   h=mask_unit_num_one_side,
-                  w=mask_unit_num_one_side,)
+                  w=mask_unit_num_one_side, )
 
     return torch.Tensor(mask)
 
@@ -49,4 +49,3 @@ class MaskGenerator:
 
         mask = repeat(mask, pattern="c -> c h w", h=self.model_patch_num_one_side, w=self.model_patch_num_one_side)
         return torch.Tensor(mask)
-

@@ -41,5 +41,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: meta_embedding
+  project: my_embedding
   name: satmae_dec512d1_epoch50_drop0.2

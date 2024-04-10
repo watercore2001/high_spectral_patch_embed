@@ -1,9 +1,10 @@
 from functools import partial
-from einops import rearrange, repeat
+
 import torch
-from torch import nn
+from einops import rearrange
 from timm.layers import PatchEmbed
-from timm.models.vision_transformer import VisionTransformer, init_weights_vit_timm
+from timm.models.vision_transformer import VisionTransformer
+from torch import nn
 
 __all__ = ["MetaViTBase", "MetaViTLarge"]
 
@@ -11,6 +12,7 @@ __all__ = ["MetaViTBase", "MetaViTLarge"]
 class MetaVisionTransformer(VisionTransformer):
     """ Vision Transformer with meta patch embedding
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         del self.patch_embed
@@ -22,7 +24,7 @@ class MetaVisionTransformer(VisionTransformer):
             PatchEmbed(img_size=img_size, patch_size=self.patch_size, in_chans=1, embed_dim=embed_dim)
             for _ in range(self.in_chans)
         ])
-        self.fusion_channels = nn.Linear(in_features=self.in_chans*embed_dim,
+        self.fusion_channels = nn.Linear(in_features=self.in_chans * embed_dim,
                                          out_features=embed_dim)
         self.init_weights()
 

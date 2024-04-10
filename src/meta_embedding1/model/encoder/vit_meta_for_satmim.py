@@ -1,9 +1,10 @@
 from functools import partial
-from einops import rearrange, repeat
+
 import torch
-from torch import nn
+from einops import rearrange, repeat
 from timm.models.layers import trunc_normal_
 from timm.models.vision_transformer import init_weights_vit_timm
+from torch import nn
 
 from .vit_meta import MetaVisionTransformer
 
@@ -13,6 +14,7 @@ __all__ = ["MetaViTForSatMIMBase", "MetaViTForSatMIMLarge"]
 class MetaVisionTransformerForSatMIM(MetaVisionTransformer):
     """ Vision Transformer with meta patch embedding
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         in_chans = kwargs["in_chans"]

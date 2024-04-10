@@ -1,9 +1,11 @@
 import numpy as np
 
+
 def apply_mask_to_data(data, mask):
-    masked_data = np.ma.masked_array(data, mask=1-mask)
+    masked_data = np.ma.masked_array(data, mask=1 - mask)
     flattened_data = masked_data.compressed()
     return flattened_data
+
 
 # 测试数据
 data = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
@@ -14,11 +16,13 @@ print(flattened_data)
 
 import numpy as np
 
+
 def restore_data_from_flattened(flattened_data, mask):
     h, w = mask.shape
     restored_data = np.zeros((h, w))
     restored_data[mask == 1] = flattened_data
     return restored_data
+
 
 # 测试数据
 data = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])

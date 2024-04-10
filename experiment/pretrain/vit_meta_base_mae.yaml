@@ -2,12 +2,9 @@ seed_everything: 0
 
 data:
   dropped_bands: [ 0, 9, 10 ]
-  train_percent: 1
-  dataloader_args:
-    batch_size: 64
 
 model:
-  class_path: meta_embedding.lightning_module.SatMIMPreTrainingModule
+  class_path: meta_embedding.module.PreTrainingModule
   init_args:
     encoder:
       class_path: meta_embedding.model.encoder.MetaViTForMaeBaseDec512D1
@@ -19,12 +16,6 @@ model:
         img_size: 96
         mask_ratio: 0.75
         global_pool: "avg"
-    optim_args:
-      weight_decay: 0.05
-      warmup_epochs: 10
-      annealing_epochs: 90
-      max_lr: 1e-4
-      min_lr: 1e-5
 
 trainer: ../share/pretrain.yaml
 
@@ -32,5 +23,5 @@ used_ckpt_for_test: "no"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: satmim
+  project: meta_pretrain
   name: vit_meta_base_dec512d1

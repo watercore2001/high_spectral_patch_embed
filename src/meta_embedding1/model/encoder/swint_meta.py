@@ -1,8 +1,10 @@
-from .swint import SwinTransformer
-from torch import nn
-from timm.layers import PatchEmbed
 import torch
 from einops import rearrange
+from timm.layers import PatchEmbed
+from torch import nn
+
+from .swint import SwinTransformer
+
 
 class MetaSwinTransformer(SwinTransformer):
     def __init__(self, **kwargs):
@@ -13,11 +15,12 @@ class MetaSwinTransformer(SwinTransformer):
         embed_dim = kwargs["embed_dim"]
         self.patch_size = kwargs["patch_size"]
         self.patch_embeds = nn.ModuleList([
-            PatchEmbed(img_size=img_size, patch_size=self.patch_size, in_chans=1, embed_dim=embed_dim, output_fmt='NHWC')
+            PatchEmbed(img_size=img_size, patch_size=self.patch_size, in_chans=1, embed_dim=embed_dim,
+                       output_fmt='NHWC')
             for _ in range(self.in_chans)
         ])
 
-        self.fusion_channels = nn.Linear(in_features=self.in_chans*embed_dim,
+        self.fusion_channels = nn.Linear(in_features=self.in_chans * embed_dim,
                                          out_features=embed_dim)
         self.init_weights()
 
@@ -29,7 +32,7 @@ class MetaSwinTransformer(SwinTransformer):
         x = rearrange(x, pattern="c b h w d -> b (h w) (c d)")
         x = self.fusion_channels(x)
         _, l, _ = x.shape
-        h = w = int(l**0.5)
+        h = w = int(l ** 0.5)
         x = rearrange(x, pattern="b (h w) c -> b h w c", h=h, w=w)
         # ---------- meta patch embed -----------
 
@@ -38,10 +41,8 @@ class MetaSwinTransformer(SwinTransformer):
         x = self.norm(x)
         return x
 
+
 class MetaSwinBase(MetaSwinTransformer):
     def __init__(self, **kwargs):
         super().__init__(patch_size=4, window_size=8, embed_dim=128, depths=(2, 2, 18, 2), num_heads=(4, 8, 16, 32),
                          **kwargs)
-
-
-

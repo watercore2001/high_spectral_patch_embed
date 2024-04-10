@@ -7,19 +7,19 @@ from functools import partial
 
 import torch
 import torch.nn as nn
-
+from einops import rearrange, repeat
 from timm.models.vision_transformer import Block
 
-from .vit_group_channels import GroupChannelsVisionTransformer
 from .pos_embed import get_2d_sincos_pos_embed, get_1d_sincos_pos_embed_from_grid
-from einops import rearrange, repeat
+from .vit_group_channels import GroupChannelsVisionTransformer
+
 
 class GroupChannelViTForMae(GroupChannelsVisionTransformer):
     """ Masked Autoencoder with VisionTransformer backbone
     """
 
     def __init__(self, decoder_embed_dim: int, decoder_depth: int,
-                 decoder_channel_embed: int=128, decoder_num_heads:int=16, decoder_mlp_ratio:float=4,
+                 decoder_channel_embed: int = 128, decoder_num_heads: int = 16, decoder_mlp_ratio: float = 4,
                  mask_ratio: float = None, spatial_mask: bool = None,
                  **kwargs):
         super().__init__(**kwargs)
@@ -34,8 +34,9 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
         num_patches = self.patch_embed[0].num_patches
         num_groups = len(self.channel_groups)
         # add pos embed in decoder
-        self.decoder_pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, decoder_embed_dim - decoder_channel_embed),
-                                              requires_grad=False)
+        self.decoder_pos_embed = nn.Parameter(
+            torch.zeros(1, num_patches + 1, decoder_embed_dim - decoder_channel_embed),
+            requires_grad=False)
         decoder_pos_embed = get_2d_sincos_pos_embed(self.decoder_pos_embed.shape[-1],
                                                     int(self.patch_embed[0].num_patches ** .5), cls_token=True)
         self.decoder_pos_embed.data.copy_(torch.from_numpy(decoder_pos_embed).float().unsqueeze(0))
@@ -105,13 +106,13 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
             # Independently mask each channel (i.e. spatial location has subset of channels visible)
             x, mask, ids_restore = self.random_masking(x.view(b, -1, D), mask_ratio)  # (N, 0.25*G*L, D)
             mask = mask.view(b, G, L)
-        h = w = int(L**0.5)
+        h = w = int(L ** 0.5)
         mask = repeat(mask, "b g (h w) -> b g (h p1) (w p2)", h=h, w=w, p1=self.patch_size, p2=self.patch_size)
         in_chans = sum(len(group) for group in self.channel_groups)
         result_mask = torch.zeros(b, in_chans, self.img_size, self.img_size).to(mask.device)
         for i, group in enumerate(self.channel_groups):
             for band in group:
-                result_mask[:,band] = mask[:, i]
+                result_mask[:, band] = mask[:, i]
         # ---------------------add mask
 
         x = self.forward_after_mask(x)
@@ -155,22 +156,22 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
 
         # Separate channel axis
         N, GL, D = x.shape
-        x = x.view(N, G, GL//G, D)
+        x = x.view(N, G, GL // G, D)
 
         # predictor projection
         x_c_patch = []
         for i, group in enumerate(self.channel_groups):
             x_c = x[:, i]  # (N, L, D)
             dec = self.decoder_pred[i](x_c)  # (N, L, g_c * p^2)
-            dec = dec.view(N, x_c.shape[1], -1, int(self.patch_size**2))  # (N, L, g_c, p^2)
+            dec = dec.view(N, x_c.shape[1], -1, int(self.patch_size ** 2))  # (N, L, g_c, p^2)
             dec = torch.einsum('nlcp->nclp', dec)  # (N, g_c, L, p^2)
             x_c_patch.append(dec)
 
         x = torch.cat(x_c_patch, dim=1)  # (N, c, L, p**2)
         b, c, l, pp = x.shape
-        h=w=int(l**0.5)
-        p=int(pp**0.5)
-        x = rearrange(x, "b c (h w) (p1 p2) -> b c (h p1) (w p2)", h=h,w=w,p1=p,p2=p)
+        h = w = int(l ** 0.5)
+        p = int(pp ** 0.5)
+        x = rearrange(x, "b c (h w) (p1 p2) -> b c (h p1) (w p2)", h=h, w=w, p1=p, p2=p)
         return x
 
     def test_result_mask(self, x, result_mask):
@@ -182,17 +183,15 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
         N, GL, D = x.shape
         x = x.view(N, G, GL // G, D)
 
-
         # predictor projection
         import numpy as np
         x = x.detach().numpy()
-        mask_positions = np.all(x == np.array(self.mask_token.detach().numpy()[0,0,:]), axis=-1) # b, g, l
+        mask_positions = np.all(x == np.array(self.mask_token.detach().numpy()[0, 0, :]), axis=-1)  # b, g, l
         print(mask_positions)
         from einops import reduce
         result_mask = reduce(result_mask, "b c (h p1) (w p2) -> b c h w", "mean",
                              p1=self.patch_size, p2=self.patch_size)
         result_mask = rearrange(result_mask, "b c h w -> b c (h w)")
-
 
         for idx in np.argwhere(mask_positions):
             print(idx)
@@ -204,8 +203,7 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
             assert torch.all(result_mask[b, list(self.channel_groups[g]), l] == 0).item()
         print("celebrate right mask")
 
-
-    def forward(self, batch, is_pretrain: bool, is_classify: bool=None):
+    def forward(self, batch, is_pretrain: bool, is_classify: bool = None):
         if is_pretrain:
             latent, mask, ids_restore = self.forward_encoder(batch["x"], self.mask_ratio)
             pred = self.forward_decoder(latent, ids_restore)  # [N, C, L, p*p]

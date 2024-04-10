@@ -33,5 +33,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: meta_embedding
-  name: vit_meta_base_per1
+  project: my_embedding
+  name: vit_meta_base
