@@ -7,3 +7,4 @@ from .vit_group_for_mae import GroupViTForMaeBaseDec512D1
 from .vit_meta import MetaViTBase
 from .vit_meta_for_mae import MetaViTForMaeBaseDec512D1
 from .vit_patch3d import ViT3dPatchBase
+from .vit_patch3d_for_mae import Patch3dForMaeBaseDec512D1

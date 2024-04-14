@@ -1,22 +1,23 @@
 seed_everything: 0
 
 data:
-  dropped_bands: [ 0, 9, 10 ]
+  dropped_bands: [ 10 ]
 
 model:
-  class_path: meta_embedding.lightning_module.ClassificationModule
+  class_path: meta_embedding.modules.ClassificationModule
   init_args:
     encoder:
-      class_path: meta_embedding.model.encoder.MetaViTBase
+      class_path: meta_embedding.models.encoder.ViT3dPatchBase
       init_args:
-        in_chans: 10
+        in_chans: 12
+        channel_unit: 3
         patch_size: 8
         img_size: 96
         drop_rate: 0.2
         drop_path_rate: 0.2
         global_pool: "avg"
     header:
-      class_path: meta_embedding.model.header.LinearHeader
+      class_path: meta_embedding.models.header.LinearHeader
       init_args:
         input_dim: 1000
         num_classes: 62
@@ -33,5 +34,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: my_embedding
-  name: vit_meta_base
+  project: fmow
+  name: vit_patch3d_base

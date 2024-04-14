@@ -7,7 +7,7 @@ model:
   class_path: meta_embedding.modules.ClassificationModule
   init_args:
     encoder:
-      class_path: meta_embedding.models.encoder.SwinBase
+      class_path: meta_embedding.models.encoder.MetaSwinBase
       init_args:
         in_chans: 10
         img_size: 96
@@ -32,5 +32,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: my_embedding
-  name: swin_base
+  project: fmow
+  name: swin_meta_base

@@ -4,11 +4,15 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.lightning_module.ClassificationModule
+  class_path: meta_embedding.modules.FineTuningModule
   init_args:
+    pretrain_ckpt_path: /mnt/disk/xials/workspace/fmow_mae/vit_group_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0646.ckpt
+    is_classify: True
     encoder:
-      class_path: meta_embedding.model.encoder.GroupViTBase
+      class_path: meta_embedding.models.encoder.GroupViTForMaeBaseDec512D1
       init_args:
+        # the reconstruction task is very hard,
+        # so there's no over-fitting during pretraining, we don't need dropout in pretrain
         channel_groups:
           - [ 0, 1, 2, 6 ]
           - [ 3, 4, 5, 7 ]
@@ -20,7 +24,7 @@ model:
         drop_path_rate: 0.2
         global_pool: "avg"
     header:
-      class_path: meta_embedding.model.header.LinearHeader
+      class_path: meta_embedding.models.header.LinearHeader
       init_args:
         input_dim: 1000
         num_classes: 62
@@ -28,8 +32,8 @@ model:
       weight_decay: 0.05
       warmup_epochs: 10
       annealing_epochs: 90
-      max_lr: 1e-3
-      min_lr: 1e-4
+      max_lr: 1e-4
+      min_lr: 1e-5
 
 trainer: ../share/trainer.yaml
 
@@ -37,5 +41,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: my_embedding
-  name: vit_group_base
+  project: fmow
+  name: group_dec512d1_epoch50

@@ -41,6 +41,14 @@ class BaseModule(LightningModule):
         y_hat = self.header(y_hat) if self.header else y_hat
         return y_hat
 
+    @torch.jit.ignore
+    def no_weight_decay(self):
+        result = set()
+        for module in [self.encoder, self.decoder, self.header]:
+            if module is not None and hasattr(module, "no_weight_decay"):
+                result = result | module.no_weight_decay()
+        return result
+
     def get_param_groups(self):
         """ Split params into two groups according to encoder.no_weight_decay()
         :return: List of groups with weight decay and without weight decay
@@ -52,7 +60,7 @@ class BaseModule(LightningModule):
                     return True
             return False
 
-        skip_keywords = self.encoder.no_weight_decay()
+        skip_keywords = self.no_weight_decay()
 
         has_decay_param = []
         no_decay_param = []

@@ -43,7 +43,7 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
             torch.zeros(1, num_patches + 1, decoder_embed_dim - decoder_channel_embed),
             requires_grad=False)
         decoder_pos_embed = get_2d_sincos_pos_embed(self.decoder_pos_embed.shape[-1],
-                                                    int(self.patch_embed[0].num_patches ** .5), cls_token=True)
+                                                    int(num_patches ** .5), cls_token=True)
         self.decoder_pos_embed.data.copy_(torch.from_numpy(decoder_pos_embed).float().unsqueeze(0))
 
         self.decoder_channel_embed = nn.Parameter(torch.zeros(1, num_groups + 1, decoder_channel_embed),
@@ -152,34 +152,6 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
         x = rearrange(x, "b c (h w) (p1 p2) -> b c (h p1) (w p2)", h=h, w=w, p1=p, p2=p)
         return x
 
-    def test_result_mask(self, x, result_mask):
-        # remove cls token
-        x = x[:, 1:, :]
-
-        # Separate channel axis
-        G = 3
-        N, GL, D = x.shape
-        x = x.view(N, G, GL // G, D)
-
-        # predictor projection
-        import numpy as np
-        x = x.detach().numpy()
-        mask_positions = np.all(x == np.array(self.mask_token.detach().numpy()[0, 0, :]), axis=-1)  # b, g, l
-        print(mask_positions)
-        from einops import reduce
-        result_mask = reduce(result_mask, "b c (h p1) (w p2) -> b c h w", "mean",
-                             p1=self.patch_size, p2=self.patch_size)
-        result_mask = rearrange(result_mask, "b c h w -> b c (h w)")
-
-        for idx in np.argwhere(mask_positions):
-            print(idx)
-            b, g, l = idx[0], idx[1], idx[2]
-            assert torch.all(result_mask[b, list(self.channel_groups[g]), l] == 1).item()
-        for idx in np.argwhere(np.logical_not(mask_positions)):
-            print(idx)
-            b, g, l = idx[0], idx[1], idx[2]
-            assert torch.all(result_mask[b, list(self.channel_groups[g]), l] == 0).item()
-        print("celebrate right mask")
 
     def forward(self, batch, is_pretrain: bool, is_classify: bool = None):
         if is_pretrain:

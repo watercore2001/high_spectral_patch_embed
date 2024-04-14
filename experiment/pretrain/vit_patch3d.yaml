@@ -1,19 +1,16 @@
 seed_everything: 0
 
 data:
-  dropped_bands: [ 0, 9, 10 ]
+  dropped_bands: [ 10 ]
 
 model:
   class_path: meta_embedding.modules.PreTrainingModule
   init_args:
     encoder:
-      class_path: meta_embedding.models.encoder.GroupViTForMaeBaseDec512D1
+      class_path: meta_embedding.models.encoder.Patch3dForMaeBaseDec512D1
       init_args:
-        channel_groups:
-          - [ 0, 1, 2, 6 ]
-          - [ 3, 4, 5, 7 ]
-          - [ 8, 9 ]
-        in_chans: 10
+        in_chans: 12
+        channel_unit: 3
         patch_size: 8
         img_size: 96
         mask_ratio: 0.75
@@ -33,4 +30,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: fmow_mae
-  name: vit_group_base_dec512d1
+  name: vit_patch3d_base_dec512d1

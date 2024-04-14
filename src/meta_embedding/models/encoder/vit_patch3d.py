@@ -13,7 +13,7 @@ from timm.models.vision_transformer import PatchEmbed
 
 from meta_embedding.models.encoder.util.pos_embed import get_2d_sincos_pos_embed, get_1d_sincos_pos_embed_from_grid
 
-__all__ = ["ViT3dPatchBase"]
+__all__ = ["Vit3dPatch", "ViT3dPatchBase"]
 
 
 class Vit3dPatch(timm.models.vision_transformer.VisionTransformer):
@@ -36,9 +36,9 @@ class Vit3dPatch(timm.models.vision_transformer.VisionTransformer):
         self.pos_embed.data.copy_(torch.from_numpy(pos_embed).float().unsqueeze(0))
 
         assert self.in_chans % self.channel_unit == 0
-        num_groups = self.in_chans // self.channel_unit
-        self.channel_embed = nn.Parameter(torch.zeros(1, num_groups, channel_embed))
-        chan_embed = get_1d_sincos_pos_embed_from_grid(self.channel_embed.shape[-1], torch.arange(num_groups).numpy())
+        self.num_groups = self.in_chans // self.channel_unit
+        self.channel_embed = nn.Parameter(torch.zeros(1, self.num_groups, channel_embed))
+        chan_embed = get_1d_sincos_pos_embed_from_grid(self.channel_embed.shape[-1], torch.arange(self.num_groups).numpy())
         self.channel_embed.data.copy_(torch.from_numpy(chan_embed).float().unsqueeze(0))
 
         # Extra embedding for cls to fill embed_dim

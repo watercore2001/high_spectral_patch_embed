@@ -6,7 +6,6 @@ Bandwise patch embedding for remote sensing high spectral image in sup and ssl t
 
 - 转移所有 checkpoint
 
-Pretrain 和 Finetuning 都是 1e-4 
+From scratch 是 1e-3
 
-- 利用 meta embedding 测试 1e-3 还是 1e-4 好
-- 有机会就重跑...
+Pretrain 和 Finetuning 都是 1e-4

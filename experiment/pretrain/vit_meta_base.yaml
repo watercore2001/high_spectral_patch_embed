@@ -9,8 +9,6 @@ model:
     encoder:
       class_path: meta_embedding.models.encoder.MetaViTForMaeBaseDec512D1
       init_args:
-        # the reconstruction task is very hard,
-        # so there's no over-fitting during pretraining, we don't need dropout in pretrain
         in_chans: 10
         patch_size: 8
         img_size: 96
@@ -29,5 +27,5 @@ used_ckpt_for_test: "no"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: meta_pretrain
-  name: vit_meta_base_dec512d1_lr1e-3
+  project: fmow_mae
+  name: vit_meta_base_dec512d1

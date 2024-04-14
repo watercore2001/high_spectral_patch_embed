@@ -4,15 +4,11 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.modules.FineTuningModule
+  class_path: meta_embedding.modules.ClassificationModule
   init_args:
-    pretrain_ckpt_path: /mnt/disk/xials/workspace/meta_pretrain/vit_meta_base_dec512d1_lr1e-3/checkpoints/epoch=049_val_mask_loss=0.0246.ckpt
-    is_classify: True
     encoder:
-      class_path: meta_embedding.models.encoder.MetaViTForMaeBaseDec512D1
+      class_path: meta_embedding.models.encoder.ViTBase
       init_args:
-        # the reconstruction task is very hard,
-        # so there's no over-fitting during pretraining, we don't need dropout in pretrain
         in_chans: 10
         patch_size: 8
         img_size: 96
@@ -28,8 +24,8 @@ model:
       weight_decay: 0.05
       warmup_epochs: 10
       annealing_epochs: 90
-      max_lr: 1e-4
-      min_lr: 1e-5
+      max_lr: 1e-3
+      min_lr: 1e-4
 
 trainer: ../share/trainer.yaml
 
@@ -37,5 +33,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: my_embedding
-  name: meta_dec512d1_epoch50_pre1e-3_fine1e-4
+  project: fmow
+  name: vit_base

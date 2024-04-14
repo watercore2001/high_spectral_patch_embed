@@ -4,10 +4,10 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.module.ClassificationModule
+  class_path: meta_embedding.modules.ClassificationModule
   init_args:
     encoder:
-      class_path: meta_embedding.model.encoder.MetaSwinBase
+      class_path: meta_embedding.models.encoder.SwinBase
       init_args:
         in_chans: 10
         img_size: 96
@@ -15,7 +15,7 @@ model:
         drop_path_rate: 0.2
         global_pool: "avg"
     header:
-      class_path: meta_embedding.model.header.LinearHeader
+      class_path: meta_embedding.models.header.LinearHeader
       init_args:
         input_dim: 1000
         num_classes: 62
@@ -32,5 +32,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: my_embedding
-  name: swin_meta_base
+  project: fmow
+  name: swin_base

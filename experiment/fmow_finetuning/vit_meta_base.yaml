@@ -4,19 +4,15 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.modules.SatMIMFineTuningModule
+  class_path: meta_embedding.modules.FineTuningModule
   init_args:
-    pretrain_ckpt_path: /mnt/disk/xials/workspace/satmim/vit_group_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0646.ckpt
+    pretrain_ckpt_path: /mnt/disk/xials/workspace/fmow_mae/vit_meta_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0218.ckpt
     is_classify: True
     encoder:
-      class_path: meta_embedding.models.encoder.GroupViTForMaeBaseDec512D1
+      class_path: meta_embedding.models.encoder.MetaViTForMaeBaseDec512D1
       init_args:
         # the reconstruction task is very hard,
         # so there's no over-fitting during pretraining, we don't need dropout in pretrain
-        channel_groups:
-          - [ 0, 1, 2, 6 ]
-          - [ 3, 4, 5, 7 ]
-          - [ 8, 9 ]
         in_chans: 10
         patch_size: 8
         img_size: 96
@@ -24,7 +20,7 @@ model:
         drop_path_rate: 0.2
         global_pool: "avg"
     header:
-      class_path: meta_embedding.model.header.LinearHeader
+      class_path: meta_embedding.models.header.LinearHeader
       init_args:
         input_dim: 1000
         num_classes: 62
@@ -41,5 +37,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: my_embedding
-  name: satmae_dec512d1_epoch50_drop0.2
+  project: fmow
+  name: meta_dec512d1_epoch50

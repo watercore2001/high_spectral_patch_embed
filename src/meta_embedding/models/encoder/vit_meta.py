@@ -3,13 +3,13 @@ from functools import partial
 import torch
 from einops import rearrange
 from timm.layers import PatchEmbed
-from timm.models.vision_transformer import VisionTransformer
+import timm
 from torch import nn
 
 __all__ = ["MetaViTBase"]
 
 
-class MetaVisionTransformer(VisionTransformer):
+class MetaVisionTransformer(timm.models.vision_transformer.VisionTransformer):
     """ Vision Transformer with meta patch embedding
     """
 
