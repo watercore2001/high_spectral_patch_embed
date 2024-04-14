@@ -16,6 +16,12 @@ model:
         img_size: 96
         mask_ratio: 0.75
         global_pool: "avg"
+    optim_args:
+      weight_decay: 0.05
+      warmup_epochs: 5
+      annealing_epochs: 45
+      max_lr: 1e-4
+      min_lr: 1e-5
 
 trainer: ../share/pretrain.yaml
 

@@ -4,7 +4,7 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.lightning_module.SatMIMFineTuningModule
+  class_path: meta_embedding.modules.SatMIMFineTuningModule
   init_args:
     pretrain_ckpt_path: /mnt/disk/xials/workspace/satmim/vit_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0276.ckpt
     is_classify: True

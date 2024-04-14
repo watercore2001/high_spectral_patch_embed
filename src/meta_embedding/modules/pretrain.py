@@ -11,6 +11,7 @@ __all__ = ["PreTrainingModule"]
 
 
 class PreTrainingModule(BaseModule):
+
     def __init__(self, encoder: nn.Module, optim_args: AdamWCosineOptimArgs =
     AdamWCosineOptimArgs(weight_decay=0.05, warmup_epochs=10,
                          annealing_epochs=40, max_lr=1e-4, min_lr=1e-5)):

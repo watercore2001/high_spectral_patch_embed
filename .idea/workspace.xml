@@ -9,6 +9,14 @@
   <component name="ChangeListManager">
     <list default="true" id="5bd075eb-3044-4712-89d9-b47099edff01" name="Changes" comment="Working at meta_embedding1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/finetuning/vit_base_mae_fmow.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/finetuning/vit_base_fmow.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/finetuning/vit_group_base_fmow.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/finetuning/vit_group_base_fmow.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/finetuning/vit_meta_base_mae_fmow.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/finetuning/vit_meta_base_fmow.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_group_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_group_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/share/pretrain.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/share/pretrain.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/share/trainer.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/share/trainer.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/meta_embedding/modules/pretrain.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/modules/pretrain.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,6 +158,10 @@
       <workItem from="1712118546496" duration="2145000" />
       <workItem from="1712643488260" duration="1168000" />
       <workItem from="1712673594400" duration="22000" />
+      <workItem from="1712931176645" duration="5000" />
+      <workItem from="1712939179712" duration="1227000" />
+      <workItem from="1713003540634" duration="2226000" />
+      <workItem from="1713024137063" duration="10000" />
     </task>
     <task id="LOCAL-00002" summary="Finish group satmae">
       <option name="closed" value="true" />
@@ -207,7 +219,8 @@
     <MESSAGE value="Ready for 3D patch" />
     <MESSAGE value="Finish vanilla pretrain" />
     <MESSAGE value="Working at meta_embedding1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working at meta_embedding1" />
+    <MESSAGE value="Ignore idea" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ignore idea" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/high_spectral_patch_embed$trainer.coverage" NAME="trainer Coverage Results" MODIFIED="1709706054952" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

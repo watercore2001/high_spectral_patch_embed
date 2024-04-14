@@ -20,8 +20,8 @@ model:
       weight_decay: 0.05
       warmup_epochs: 5
       annealing_epochs: 45
-      max_lr: 1e-3
-      min_lr: 1e-4
+      max_lr: 1e-4
+      min_lr: 1e-5
 
 trainer: ../share/pretrain.yaml
 

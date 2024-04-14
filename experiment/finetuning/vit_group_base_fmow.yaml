@@ -4,12 +4,12 @@ data:
   dropped_bands: [ 0, 9, 10 ]
 
 model:
-  class_path: meta_embedding.lightning_module.SatMIMFineTuningModule
+  class_path: meta_embedding.modules.SatMIMFineTuningModule
   init_args:
     pretrain_ckpt_path: /mnt/disk/xials/workspace/satmim/vit_group_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0646.ckpt
     is_classify: True
     encoder:
-      class_path: meta_embedding.model.encoder.GroupViTForMaeBaseDec512D1
+      class_path: meta_embedding.models.encoder.GroupViTForMaeBaseDec512D1
       init_args:
         # the reconstruction task is very hard,
         # so there's no over-fitting during pretraining, we don't need dropout in pretrain
