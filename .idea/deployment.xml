@@ -6,7 +6,7 @@
       <paths name="xials@gs1.netbird.cloud:22 key">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/xials/code/patch_embed" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="code/patch_embed" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

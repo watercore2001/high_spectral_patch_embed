@@ -36,8 +36,8 @@ class ViTForMae(VisionTransformer):
             for _ in range(decoder_depth)])
 
         self.decoder_norm = nn.LayerNorm(decoder_embed_dim)
-
         self.decoder_pred = nn.Linear(decoder_embed_dim, self.patch_size ** 2 * self.in_chans, bias=True)
+
 
         self.init_weights()
 
@@ -101,15 +101,12 @@ class ViTForMae(VisionTransformer):
         x = rearrange(x, "b (h w) (c p1 p2) -> b c (h p1) (w p2)", h=h, w=w, p1=self.patch_size, p2=self.patch_size)
         return x
 
-    def forward(self, batch, is_pretrain: bool, is_classify: bool = None):
-        if is_pretrain:
-            latent, mask, ids_restore = self.forward_encoder(batch["x"], self.mask_ratio)
-            pred = self.forward_decoder(latent, ids_restore)  # [N, C, L, p*p]
-            return pred, mask
-        elif is_classify:
-            x = self.forward_features(batch["x"])
-            x = self.forward_head(x)
-            return [x]
+    def forward(self, batch):
+        latent, mask, ids_restore = self.forward_encoder(batch["x"], self.mask_ratio)
+        pred = self.forward_decoder(latent, ids_restore)  # [b, c, h, w]
+        return pred, mask
+
+
 
 
 class ViTForMaeBaseDec512D1(ViTForMae):

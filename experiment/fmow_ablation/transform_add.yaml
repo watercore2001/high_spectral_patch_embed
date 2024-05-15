@@ -5,18 +5,20 @@ data: ../share/fmow_10bands.yaml
 model:
   class_path: meta_embedding.modules.ClassificationModule
   init_args:
-    is_classify: True
     encoder:
-      class_path: meta_embedding.models.encoder.ViTBase
+      class_path: meta_embedding.models.encoder.MetaViTBase
       init_args:
+        use_channel_embed: True
+        use_transformer: True
+        fusion_strategy: "add"
         in_chans: 10
         patch_size: 8
         img_size: 96
         drop_rate: 0.2
         drop_path_rate: 0.2
         global_pool: "avg"
-    decoder:
-      class_path: meta_embedding.models.decoder.LinearHeader
+    header:
+      class_path: meta_embedding.models.header.LinearHeader
       init_args:
         input_dim: 1000
         num_classes: 62
@@ -34,4 +36,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: fmow
-  name: vit_base2
+  name: transform_add

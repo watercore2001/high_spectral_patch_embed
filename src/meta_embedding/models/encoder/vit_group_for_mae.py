@@ -162,6 +162,10 @@ class GroupChannelViTForMae(GroupChannelsVisionTransformer):
             x = self.forward_features(batch["x"])
             x = self.forward_head(x)
             return [x]
+        else:
+            x = self.forward_features(batch["x"]) # (N, 1 + G*L, D)
+            x = x[:, 1:, :]
+
 
 
 class GroupViTForMaeBaseDec512D1(GroupChannelViTForMae):

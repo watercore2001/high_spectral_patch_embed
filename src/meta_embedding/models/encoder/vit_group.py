@@ -103,7 +103,7 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
         return x
 
     def forward(self, batch):
-        return [super().forward(batch["x"])]
+        return super().forward(batch["x"])
 
 
 class GroupViTBase(GroupChannelsVisionTransformer):

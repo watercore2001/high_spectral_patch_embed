@@ -1,7 +1,6 @@
 seed_everything: 0
 
-data:
-  dropped_bands: [ 0, 9, 10 ]
+data: ../share/fmow_10bands.yaml
 
 model:
   class_path: meta_embedding.modules.PreTrainingModule

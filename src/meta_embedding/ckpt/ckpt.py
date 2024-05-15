@@ -69,6 +69,8 @@ def meta_main():
 
 
 if __name__ == "__main__":
-    vit_main()
-    group_main()
-    meta_main()
+    #vit_main()
+    #group_main()
+    #meta_main()
+    ckpt_dict = torch.load("/mnt/code/ckpts/meta_e49_l0.0218_v2.ckpt", map_location="cpu")
+    pass

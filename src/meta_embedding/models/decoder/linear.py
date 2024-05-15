@@ -1,11 +1,10 @@
 from torch import nn
 
-from .base_header import BaseHeader
 
-
-class LinearHeader(BaseHeader):
+class LinearHeader(nn.Module):
     def __init__(self, input_dim: int, num_classes: int):
-        super().__init__(num_classes)
+        super().__init__()
+        self.num_classes = num_classes
         self.header = nn.Linear(input_dim, num_classes)
 
     def forward(self, x):

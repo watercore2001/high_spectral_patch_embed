@@ -6,6 +6,6 @@ Bandwise patch embedding for remote sensing high spectral image in sup and ssl t
 
 - 转移所有 checkpoint
 
-From scratch 是 1e-3
+From scratch 是 1e-3, 目的是为了加快收敛速度
 
 Pretrain 和 Finetuning 都是 1e-4

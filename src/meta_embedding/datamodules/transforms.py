@@ -19,13 +19,15 @@ class SentinelNormalize:
         self.mean = np.array(mean)
         self.std = np.array(std)
 
-    def __call__(self, image: np.ndarray) -> np.ndarray:
+    def __call__(self, image: np.ndarray):
         min_value = self.mean - 2 * self.std
         max_value = self.mean + 2 * self.std
         result = (image - min_value[:, None, None]) / (max_value - min_value)[:, None, None] * 255
         # torch.to_tensor will normalize again
         result = np.clip(result, 0, 255).astype(np.uint8)
         result = rearrange(result, "c h w -> h w c")
+        # ToTensor's behavior is really strange
+        result = transforms.ToTensor()(result)
         return result
 
 
@@ -38,7 +40,6 @@ class FMOWSentinelTrainTransform(BaseTransform):
     def __call__(self, image: np.ndarray) -> torch.Tensor:
         t = transforms.Compose([
             SentinelNormalize(self.mean, self.std),
-            transforms.ToTensor(),
             transforms.RandomResizedCrop(self.input_size, scale=(0.2, 1.0),
                                          interpolation=transforms.InterpolationMode.BICUBIC,
                                          antialias=True),
@@ -63,9 +64,9 @@ class FMOWSentinelEvalTransform(BaseTransform):
 
         t = transforms.Compose([
             SentinelNormalize(self.mean, self.std),
-            # ToTensor's behavior is really strange
-            transforms.ToTensor(),
-            transforms.Resize(temp_size, interpolation=transforms.InterpolationMode.BICUBIC, antialias=True),
+            transforms.Resize(temp_size,
+                              interpolation=transforms.InterpolationMode.BICUBIC,
+                              antialias=True),
             transforms.CenterCrop(self.input_size)
         ])
 

@@ -1,7 +1,6 @@
 seed_everything: 0
 
-data:
-  dropped_bands: [ 0, 9, 10 ]
+data: ../share/fmow_10bands.yaml
 
 model:
   class_path: meta_embedding.modules.FineTuningModule
@@ -11,8 +10,6 @@ model:
     encoder:
       class_path: meta_embedding.models.encoder.GroupViTForMaeBaseDec512D1
       init_args:
-        # the reconstruction task is very hard,
-        # so there's no over-fitting during pretraining, we don't need dropout in pretrain
         channel_groups:
           - [ 0, 1, 2, 6 ]
           - [ 3, 4, 5, 7 ]

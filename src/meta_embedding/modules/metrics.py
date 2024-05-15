@@ -31,10 +31,10 @@ def generate_classification_metric(num_classes: int, ignore_index: int = None) -
     # add kappa
     global_metric_dict[f"{CohenKappa.__name__.lower()}"] = CohenKappa(task="multiclass", num_classes=num_classes,
                                                                       ignore_index=ignore_index)
-    confusion_matrix = ConfusionMatrix(task="multiclass", normalize="true",
-                                       num_classes=num_classes, ignore_index=ignore_index)
+    # confusion_matrix = ConfusionMatrix(task="multiclass", normalize="true",
+    #                                    num_classes=num_classes, ignore_index=ignore_index)
 
-    return MetricCollection(global_metric_dict), MetricCollection(classes_metric_dict), confusion_matrix
+    return MetricCollection(global_metric_dict), MetricCollection(classes_metric_dict)
 
 
 def separate_classes_metric(classes_metric_value: dict[str, list[float]]) -> dict[str, float]:

@@ -1,22 +1,24 @@
 seed_everything: 0
 
-data: ../share/fmow_10bands.yaml
+data: ../share/fmow_12bands.yaml
 
 model:
-  class_path: meta_embedding.modules.ClassificationModule
+  class_path: meta_embedding.modules.FineTuningModule
   init_args:
+    pretrain_ckpt_path: /mnt/disk/xials/workspace/fmow_mae/vit_patch3d_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0911.ckpt
     is_classify: True
     encoder:
-      class_path: meta_embedding.models.encoder.ViTBase
+      class_path: meta_embedding.models.encoder.Patch3dForMaeBaseDec512D1
       init_args:
-        in_chans: 10
+        in_chans: 12
+        channel_unit: 3
         patch_size: 8
         img_size: 96
         drop_rate: 0.2
         drop_path_rate: 0.2
         global_pool: "avg"
-    decoder:
-      class_path: meta_embedding.models.decoder.LinearHeader
+    header:
+      class_path: meta_embedding.models.header.LinearHeader
       init_args:
         input_dim: 1000
         num_classes: 62
@@ -34,4 +36,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: fmow
-  name: vit_base2
+  name: patch3d_dec512d1_epoch50

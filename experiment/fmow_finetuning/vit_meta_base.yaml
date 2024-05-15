@@ -1,18 +1,22 @@
 seed_everything: 0
 
-data:
-  dropped_bands: [ 0, 9, 10 ]
+data: ../share/fmow_10bands.yaml
 
 model:
   class_path: meta_embedding.modules.FineTuningModule
   init_args:
-    pretrain_ckpt_path: /mnt/disk/xials/workspace/fmow_mae/vit_meta_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0218.ckpt
+    pretrain_ckpt_path: /mnt/disk/xials/workspace/fmow_mae/vit_meta_base/checkpoints/epoch=049_val_mask_loss=0.0218.ckpt
     is_classify: True
     encoder:
       class_path: meta_embedding.models.encoder.MetaViTForMaeBaseDec512D1
       init_args:
         # the reconstruction task is very hard,
         # so there's no over-fitting during pretraining, we don't need dropout in pretrain
+        channel_dim: 768
+        channel_heads: 12
+        use_channel_embed: True
+        use_transformer: True
+        fusion_strategy: "linear"
         in_chans: 10
         patch_size: 8
         img_size: 96
@@ -38,4 +42,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: fmow
-  name: meta_dec512d1_epoch50
+  name: trans_linear_meta_dec512d1_epoch50

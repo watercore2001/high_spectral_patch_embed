@@ -1,7 +1,6 @@
 seed_everything: 0
 
-data:
-  dropped_bands: [ 0, 9, 10 ]
+data: ../share/fmow_10bands.yaml
 
 model:
   class_path: meta_embedding.modules.PreTrainingModule
@@ -9,6 +8,11 @@ model:
     encoder:
       class_path: meta_embedding.models.encoder.MetaViTForMaeBaseDec512D1
       init_args:
+        channel_dim: 768
+        channel_heads: 12
+        use_channel_embed: True
+        use_transformer: False
+        fusion_strategy: "linear"
         in_chans: 10
         patch_size: 8
         img_size: 96
@@ -28,4 +32,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: fmow_mae
-  name: vit_meta_base_dec512d1
+  name: linear_meta_base_dec512d1

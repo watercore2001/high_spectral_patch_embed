@@ -10,6 +10,7 @@ from functools import partial
 
 import timm.models.vision_transformer
 from torch import nn
+from einops import rearrange
 
 __all__ = ["VisionTransformer", "ViTBase"]
 
@@ -21,8 +22,16 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def forward(self, batch):
-        return [super().forward(batch["x"])]
+    def forward(self, batch, is_classify: bool):
+        if is_classify:
+            return super().forward(batch["x"])
+        else:
+            x = self.forward_features(batch["x"]) # [b l d]
+            x = x[:, 1:, :]
+            _, l, _ = x.shape
+            h = w = int(l ** 0.5)
+            x = rearrange(x, "b (h w) d -> b d h w", h=h, w=w)
+            return x
 
 
 class ViTBase(VisionTransformer):

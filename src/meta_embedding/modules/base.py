@@ -23,28 +23,22 @@ class BaseModule(LightningModule):
     def __init__(self,
                  optim_args: AdamWCosineOptimArgs,
                  encoder: nn.Module = None,
-                 decoder: nn.Module = None,
-                 header: nn.Module = None):
+                 decoder: nn.Module = None):
         super().__init__()
 
         self.optim_args = optim_args
         self.encoder = encoder
         self.decoder = decoder
-        self.header = header
 
         # must save all hyperparameters for checkpoint
         self.save_hyperparameters(logger=False)
 
-    def forward(self, batch: dict) -> torch.Tensor:
-        y_hat = self.encoder(batch)
-        y_hat = self.decoder(y_hat) if self.decoder else y_hat[-1]
-        y_hat = self.header(y_hat) if self.header else y_hat
-        return y_hat
+
 
     @torch.jit.ignore
     def no_weight_decay(self):
         result = set()
-        for module in [self.encoder, self.decoder, self.header]:
+        for module in [self.encoder, self.decoder]:
             if module is not None and hasattr(module, "no_weight_decay"):
                 result = result | module.no_weight_decay()
         return result

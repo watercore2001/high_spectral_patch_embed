@@ -45,5 +45,5 @@ class MetaSwinTransformer(SwinTransformer):
 
 class MetaSwinBase(MetaSwinTransformer):
     def __init__(self, **kwargs):
-        super().__init__(patch_size=4, window_size=8, embed_dim=128, depths=(2, 2, 18, 2), num_heads=(4, 8, 16, 32),
+        super().__init__(window_size=8, embed_dim=128, depths=(2, 2, 18, 2), num_heads=(4, 8, 16, 32),
                          **kwargs)

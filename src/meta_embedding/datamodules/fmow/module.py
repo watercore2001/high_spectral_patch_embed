@@ -3,20 +3,11 @@ import os
 from typing import Literal
 
 from .dataset import FMOWSentinelDataset
+from .. import DataloaderArgs
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader
 
 __all__ = ["FMOWSentinelDataModule"]
-
-@dataclasses.dataclass
-class DataloaderArgs:
-    batch_size: int
-    # must set to 0 in debug mode
-    num_workers: int
-    pin_memory: bool
-    shuffle: bool
-    # if the last batch size == 1, UperNet will crash because batch normalization
-    drop_last: bool = True
 
 
 class FMOWSentinelDataModule(LightningDataModule):

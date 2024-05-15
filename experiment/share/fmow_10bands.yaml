@@ -1,0 +1,13 @@
+class_path: meta_embedding.datamodules.fmow.FMOWSentinelDataModule
+init_args:
+  root_path: "/mnt/disk/xials/dataset/fmow"
+  input_size: 96
+  masked_bands: null
+  dropped_bands: [ 0, 9, 10 ]
+  train_percent: 1
+  dataloader_args:
+    # all experiment use same batch size and same learning rate
+    batch_size: 64
+    num_workers: 8
+    pin_memory: True
+    shuffle: True

@@ -1,11 +1,11 @@
 seed_everything: 0
 
-data:
-  dropped_bands: [ 0, 9, 10 ]
+data: ../share/fmow_10bands.yaml
 
 model:
   class_path: meta_embedding.modules.ClassificationModule
   init_args:
+    is_classify: True
     encoder:
       class_path: meta_embedding.models.encoder.GroupViTBase
       init_args:
@@ -19,8 +19,8 @@ model:
         drop_rate: 0.2
         drop_path_rate: 0.2
         global_pool: "avg"
-    header:
-      class_path: meta_embedding.models.header.LinearHeader
+    decoder:
+      class_path: meta_embedding.models.decoder.LinearHeader
       init_args:
         input_dim: 1000
         num_classes: 62
@@ -28,8 +28,8 @@ model:
       weight_decay: 0.05
       warmup_epochs: 10
       annealing_epochs: 90
-      max_lr: 1e-3
-      min_lr: 1e-4
+      max_lr: 1e-4
+      min_lr: 1e-5
 
 trainer: ../share/trainer.yaml
 
