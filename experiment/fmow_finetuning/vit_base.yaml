@@ -3,7 +3,7 @@ seed_everything: 0
 data: ../share/fmow_10bands.yaml
 
 model:
-  class_path: meta_embedding.modules.FineTuningModule
+  class_path: meta_embedding.modules.ClassificationModule
   init_args:
     pretrain_ckpt_path: /mnt/disk/xials/workspace/fmow_mae/vit_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0276.ckpt
     is_classify: True
@@ -26,7 +26,7 @@ model:
     optim_args:
       weight_decay: 0.05
       warmup_epochs: 10
-      annealing_epochs: 90
+      annealing_epochs: 40
       max_lr: 1e-4
       min_lr: 1e-5
 

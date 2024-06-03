@@ -22,7 +22,7 @@ model:
     optim_args:
       weight_decay: 0.05
       warmup_epochs: 10
-      annealing_epochs: 90
+      annealing_epochs: 40
       max_lr: 1e-4
       min_lr: 1e-5
 

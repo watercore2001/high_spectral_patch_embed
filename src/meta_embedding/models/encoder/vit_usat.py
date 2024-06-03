@@ -10,29 +10,43 @@ import timm.models.vision_transformer
 import torch
 import torch.nn as nn
 from timm.models.vision_transformer import PatchEmbed
-from einops import rearrange
+from einops import rearrange, reduce, repeat
 
 from meta_embedding.models.encoder.util.pos_embed import get_2d_sincos_pos_embed, get_1d_sincos_pos_embed_from_grid
 
-__all__ = ["GroupViTBase"]
+__all__ = ["USatVisionTransformer", "USatViTBase"]
 
 
-class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransformer):
-    """ Vision Transformer with support for global average pooling
-    """
+def get_gsd(id, channel_groups, group_gsds):
+    for i, group in enumerate(channel_groups):
+        if id in group:
+            return group_gsds[i]
 
-    def __init__(self, channel_embed=256, channel_groups=((0, 1, 2, 6), (3, 4, 5, 7), (8, 9)), **kwargs):
+class USatVisionTransformer(timm.models.vision_transformer.VisionTransformer):
+
+    def __init__(self, channel_embed=256, channel_groups=((0, 1, 2, 6), (3, 4, 5, 7), (8, 9)),
+                 group_gsds=(10, 20, 20), **kwargs):
         super().__init__(**kwargs)
+        self.in_chans = kwargs["in_chans"]
         self.img_size = kwargs['img_size']
         self.patch_size = kwargs['patch_size']
         self.embed_dim = kwargs['embed_dim']
 
         self.channel_groups = channel_groups
+        self.group_gsds = group_gsds
 
-        self.patch_embed = nn.ModuleList([PatchEmbed(self.img_size, self.patch_size, len(group), self.embed_dim)
-                                          for group in channel_groups])
-        # self.patch_embed = PatchEmbed(img_size, patch_size, 1, embed_dim)
-        num_patches = self.patch_embed[0].num_patches
+
+        patch_embed_list = []
+        self.min_gsd = min(group_gsds)
+        for i in range(self.in_chans):
+            gsd = get_gsd(i, channel_groups, group_gsds)
+            patch_size = gsd//self.min_gsd*self.patch_size
+            patch_embed_list.append(PatchEmbed(self.img_size, patch_size, 1, self.embed_dim, output_fmt="NHWC"))
+
+        self.patch_embeds = nn.ModuleList(patch_embed_list)
+
+        num_patches = self.patch_embeds[0].num_patches
+        self.num_patches = num_patches
 
         # Positional and channel embed
         self.pos_embed = nn.Parameter(torch.zeros(1, num_patches + 1, self.embed_dim - channel_embed))
@@ -59,15 +73,19 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
 
     def forward_before_mask(self, x):
         # ---------- patch embed -----------
-        x_c_embed = []
-        for i, group in enumerate(self.channel_groups):
-            x_c = x[:, group, :, :]
-            x_c_embed.append(self.patch_embed[i](x_c))  # (N, L, D)
+        x = torch.split(x, split_size_or_sections=1, dim=1)
+        x = [embedding_layer(channel_x) for embedding_layer, channel_x in zip(self.patch_embeds, x)]
+        # 将每一组的波段取出并计算平均值
+        grouped_tensors = []
+        for group in self.channel_groups:
+            # 从第1维度选择对应波段
+            selected_tensor = [x[i] for i in group]
+            # 对第1维度求平均值
+            mean_tensor = torch.stack(selected_tensor).mean(dim=0, keepdim=False)
+            grouped_tensors.append(mean_tensor)
 
-        x = torch.stack(x_c_embed, dim=1)  # (N, G, L, D)
+        # [(b,h1,w1,d),(b,h2,w2,d),(b,h3,w3,d)]
         # ----------------------------------
-
-        _, G, L, D = x.shape
 
         # add channel embed
         channel_embed = self.channel_embed.unsqueeze(2)  # (1, G, 1, cD)
@@ -77,10 +95,20 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
         channel_embed = channel_embed.expand(-1, -1, pos_embed.shape[2], -1)  # (1, G, L, cD)
         pos_embed = pos_embed.expand(-1, channel_embed.shape[1], -1, -1)  # (1, G, L, pD)
         pos_channel = torch.cat((pos_embed, channel_embed), dim=-1)  # (1, G, L, D)
-
+        _, _, l, _ = pos_channel.shape
+        h = w = int(l**0.5)
+        pos_channel = rearrange(pos_channel, "1 g (h w) d -> g h w d", h=h, w=w)
+        pos_channel = torch.split(pos_channel, split_size_or_sections=1, dim=0)
         # add pos embed w/o cls token
-        x = x + pos_channel  # (N, G, L, D)
-        return x
+        result = []
+        for x_i, pos_channel_i in zip(grouped_tensors, pos_channel):
+            _, h_i, w_i, _ = x_i.shape
+            scale = h//h_i
+            pos_channel_i = reduce(pos_channel_i, "1 (h scale1) (w scale2) d -> 1 h w d", "mean",
+                                   scale1=scale, scale2=scale)
+            result.append(x_i+pos_channel_i)
+
+        return result
 
     def forward_after_mask(self, x):
         b, _, _ = x.shape
@@ -99,29 +127,52 @@ class GroupChannelsVisionTransformer(timm.models.vision_transformer.VisionTransf
 
     def forward_features(self, x):
         x = self.forward_before_mask(x)
-        b, G, L, D = x.shape
-        x = x.view(b, -1, D)  # (N, G*L, D)
+        merged_tensors = []
+        for tensor in x:
+            # 将 h 和 w 合并
+            merged_tensor = rearrange(tensor, "b h w d -> b (h w) d")
+            merged_tensors.append(merged_tensor)
+
+        # 按列拼接所有合并后的 Tensor
+        x = torch.cat(merged_tensors, dim=1)
+
         x = self.forward_after_mask(x)
 
         return x
+
+    def resample(self, x):
+        _, L, _ = x.shape
+        start_idx = 0
+        out = []
+        for gsd in self.group_gsds:
+            # print("start_idx:", start_idx)
+            scale = gsd // self.min_gsd
+            num_patches = self.num_patches // (scale ** 2)
+            h = w = int(num_patches ** 0.5)
+            x_i = x[:, start_idx:start_idx+num_patches, :]
+            start_idx += num_patches
+            x_i = rearrange(x_i, "b (h w) d -> b h w d", h=h, w=w)
+            x_i = repeat(x_i, "b h w d -> b (h scale1) (w scale2) d", scale1=scale, scale2=scale)
+            out.append(x_i)
+
+        assert start_idx == L, f"{start_idx}, {L}"
+        out = torch.stack(out)
+        out = rearrange(out, "g b h w d -> b d h w g")
+        out = self.fc(out)
+        out = rearrange(out, "b d h w 1 -> b d h w")
+        return out
+
 
     def forward(self, batch, is_classify: bool):
         if is_classify:
             return super().forward(batch["x"])
         else:
-            x = self.forward_features(batch["x"])  # [b 1+GL d]
-            x = x[:, 1:, :]
-            _, GL, _ = x.shape
-            num_groups = len(self.channel_groups)
-            l = GL // num_groups
-            h = w = int(l ** 0.5)
-            x = rearrange(x, "b (g h w) d -> b d h w g", h=h, w=w, g=num_groups)
-            x = self.fc(x)
-            x = rearrange(x, "b d h w 1 -> b d h w")
-            return x
+            x = self.forward_features(batch["x"])
+            x = x[:, 1:, :] # [b L d]
+            return self.resample(x)
 
 
-class GroupViTBase(GroupChannelsVisionTransformer):
+class USatViTBase(USatVisionTransformer):
     def __init__(self, **kwargs):
         super().__init__(embed_dim=768, depth=12, num_heads=12, mlp_ratio=4, qkv_bias=True,
                          norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)

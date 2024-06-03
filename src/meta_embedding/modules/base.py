@@ -33,8 +33,6 @@ class BaseModule(LightningModule):
         # must save all hyperparameters for checkpoint
         self.save_hyperparameters(logger=False)
 
-
-
     @torch.jit.ignore
     def no_weight_decay(self):
         result = set()

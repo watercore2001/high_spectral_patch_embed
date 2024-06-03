@@ -10,6 +10,7 @@ import timm.models.vision_transformer
 import torch
 import torch.nn as nn
 from timm.models.vision_transformer import PatchEmbed
+from einops import rearrange
 
 from meta_embedding.models.encoder.util.pos_embed import get_2d_sincos_pos_embed, get_1d_sincos_pos_embed_from_grid
 
@@ -45,6 +46,8 @@ class Vit3dPatch(timm.models.vision_transformer.VisionTransformer):
         self.channel_cls_embed = nn.Parameter(torch.zeros(1, 1, channel_embed))
         channel_cls_embed = torch.zeros((1, channel_embed))
         self.channel_cls_embed.data.copy_(channel_cls_embed.float().unsqueeze(0))
+
+        self.fc = nn.Linear(self.num_groups, 1)
 
         self.init_weights()
 
@@ -101,8 +104,19 @@ class Vit3dPatch(timm.models.vision_transformer.VisionTransformer):
 
         return x
 
-    def forward(self, batch):
-        return [super().forward(batch["x"])]
+    def forward(self, batch, is_classify: bool):
+        if is_classify:
+            return super().forward(batch["x"])
+        else:
+            x = self.forward_features(batch["x"])  # [b 1+GL d]
+            x = x[:, 1:, :]
+            _, GL, _ = x.shape
+            l = GL // self.num_groups
+            h = w = int(l ** 0.5)
+            x = rearrange(x, "b (g h w) d -> b d h w g", h=h, w=w, g=self.num_groups)
+            x = self.fc(x)
+            x = rearrange(x, "b d h w 1 -> b d h w")
+            return x
 
 
 class ViT3dPatchBase(Vit3dPatch):

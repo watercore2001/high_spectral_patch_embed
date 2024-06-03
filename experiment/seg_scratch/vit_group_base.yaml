@@ -1,30 +1,32 @@
 seed_everything: 0
 
-data: ../share/fmow_10bands.yaml
+data: ../share/seg_munich.yaml
 
 model:
   class_path: meta_embedding.modules.ClassificationModule
   init_args:
-    is_classify: True
+    is_classify: False
     encoder:
-      class_path: meta_embedding.models.encoder.MetaViTBase
+      class_path: meta_embedding.models.encoder.GroupViTBase
       init_args:
-        use_channel_embed: True
+        channel_groups:
+          - [ 0, 1, 2, 6 ]
+          - [ 3, 4, 5, 7 ]
+          - [ 8, 9 ]
         in_chans: 10
         patch_size: 8
-        img_size: 96
+        img_size: 128
         drop_rate: 0.2
         drop_path_rate: 0.2
         global_pool: "avg"
     decoder:
-      class_path: meta_embedding.models.decoder.LinearHeader
+      class_path: meta_embedding.models.decoder.UPerNetForViTBase
       init_args:
-        input_dim: 1000
-        num_classes: 62
+        num_classes: 13
     optim_args:
       weight_decay: 0.05
       warmup_epochs: 10
-      annealing_epochs: 40
+      annealing_epochs: 90
       max_lr: 1e-4
       min_lr: 1e-5
 
@@ -34,5 +36,5 @@ used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
-  project: fmow
-  name: vit_meta_base_channel_embed_lr1e-4
+  project: seg
+  name: vit_group_base

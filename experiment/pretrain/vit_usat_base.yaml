@@ -6,13 +6,13 @@ model:
   class_path: meta_embedding.modules.PreTrainingModule
   init_args:
     encoder:
-      class_path: meta_embedding.models.encoder.MetaViTForMaeBaseDec512D1
+      class_path: meta_embedding.models.encoder.USatForMaeBaseDec512D1
       init_args:
-        channel_dim: 768
-        channel_heads: 12
-        use_channel_embed: True
-        use_transformer: False
-        fusion_strategy: "linear"
+        channel_groups:
+          - [ 0, 1, 2, 6 ]
+          - [ 3, 4, 5, 7 ]
+          - [ 8, 9 ]
+        group_gsds: [10,20,20]
         in_chans: 10
         patch_size: 8
         img_size: 96
@@ -32,4 +32,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: fmow_mae
-  name: linear_meta_base_dec512d1
+  name: vit_usat_base_dec512d1

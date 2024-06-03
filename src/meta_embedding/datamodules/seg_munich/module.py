@@ -8,9 +8,11 @@ from torch.utils.data import DataLoader
 class SegMunichDataModule(LightningDataModule):
     def __init__(self,
                  root_path: str,
+                 padding: bool,
                  dataloader_args: DataloaderArgs):
         super().__init__()
         self.root_path = root_path
+        self.padding = padding
         self.dataloader_args = dataloader_args
 
         self.train_dataset = None
@@ -18,10 +20,10 @@ class SegMunichDataModule(LightningDataModule):
 
     def setup(self, stage: [str] = None):
         if stage == "fit":
-            self.train_dataset = SegDataset(self.root_path, txt_name="train.txt", training=True)
-            self.val_dataset = SegDataset(self.root_path, txt_name="val.txt", training=False)
+            self.train_dataset = SegDataset(self.root_path, txt_name="train.txt", training=True, padding=self.padding)
+            self.val_dataset = SegDataset(self.root_path, txt_name="val.txt", training=False, padding=self.padding)
         if stage == "test":
-            self.val_dataset = SegDataset(self.root_path, txt_name="val.txt", training=False)
+            self.val_dataset = SegDataset(self.root_path, txt_name="val.txt", training=False, padding=self.padding)
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, **dataclasses.asdict(self.dataloader_args))

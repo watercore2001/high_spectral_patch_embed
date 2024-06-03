@@ -142,15 +142,10 @@ class Patch3dForMae(Vit3dPatch):
         return x
 
 
-    def forward(self, batch, is_pretrain: bool, is_classify: bool = None):
-        if is_pretrain:
-            latent, mask, ids_restore = self.forward_encoder(batch["x"], self.mask_ratio)
-            pred = self.forward_decoder(latent, ids_restore)  # [N, C, L, p*p]
-            return pred, mask
-        elif is_classify:
-            x = self.forward_features(batch["x"])
-            x = self.forward_head(x)
-            return [x]
+    def forward(self, batch):
+        latent, mask, ids_restore = self.forward_encoder(batch["x"], self.mask_ratio)
+        pred = self.forward_decoder(latent, ids_restore)  # [N, C, L, p*p]
+        return pred, mask
 
 
 class Patch3dForMaeBaseDec512D1(Patch3dForMae):

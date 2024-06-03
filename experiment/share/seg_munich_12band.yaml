@@ -1,6 +1,7 @@
 class_path: meta_embedding.datamodules.seg_munich.module.SegMunichDataModule
 init_args:
   root_path: "/mnt/disk/xials/dataset/TUM_128"
+  padding: True
   dataloader_args:
     # all experiment use same batch size and same learning rate
     batch_size: 16

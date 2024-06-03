@@ -12,14 +12,12 @@ __all__ = ["PreTrainingModule"]
 
 class PreTrainingModule(BaseModule):
 
-    def __init__(self, encoder: nn.Module, optim_args: AdamWCosineOptimArgs =
-    AdamWCosineOptimArgs(weight_decay=0.05, warmup_epochs=10,
-                         annealing_epochs=40, max_lr=1e-4, min_lr=1e-5)):
+    def __init__(self, encoder: nn.Module, optim_args: AdamWCosineOptimArgs):
         super().__init__(optim_args=optim_args, encoder=encoder, decoder=None)
         self.l1_loss = nn.L1Loss(reduction="none")
 
     def forward(self, batch: dict):
-        x_recover, mask = self.encoder(batch, is_pretrain=True)
+        x_recover, mask = self.encoder(batch)
         all_loss = self.l1_loss(x_recover, batch["x"])
         return all_loss, mask
 
