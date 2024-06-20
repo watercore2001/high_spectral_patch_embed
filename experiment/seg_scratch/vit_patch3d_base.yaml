@@ -1,15 +1,16 @@
 seed_everything: 0
 
-data: ../share/seg_munich_10band.yaml
+data: ../share/seg_munich_12band.yaml
 
 model:
   class_path: meta_embedding.modules.ClassificationModule
   init_args:
     is_classify: False
     encoder:
-      class_path: meta_embedding.models.encoder.ViTBase
+      class_path: meta_embedding.models.encoder.ViT3dPatchBase
       init_args:
-        in_chans: 10
+        channel_unit: 3
+        in_chans: 12
         patch_size: 8
         img_size: 128
         drop_rate: 0.2
@@ -33,4 +34,4 @@ used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: seg
-  name: vit_base1
+  name: vit_patch3d_base

@@ -10,8 +10,3 @@ callbacks:
       monitor: val_accuracy_micro
       mode: max
       save_last: True
-  - class_path: pytorch_lightning.callbacks.EarlyStopping
-    init_args:
-      monitor: val_accuracy_micro
-      mode: max
-      patience: 10

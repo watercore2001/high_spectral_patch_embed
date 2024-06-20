@@ -8,41 +8,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5bd075eb-3044-4712-89d9-b47099edff01" name="Changes" comment="Seg">
-      <change afterPath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_usat_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment/fmow_scratch/vit_usat_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment/pretrain/vit_usat_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment/seg_finetuning/vit_group_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment/seg_finetuning/vit_patch3d_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment/seg_scratch/vit_group_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment/seg_scratch/vit_usat_base.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/experiment/share/seg_munich_12band.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_usat.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_usat_for_mae.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment/seg_scratch/vit_patch3d_base.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/experiment/share/trainer2.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_base.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_group_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_group_base.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_meta_base.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_patch3d_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_patch3d_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/fmow_scratch/swin_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_scratch/swin_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/fmow_scratch/swin_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_scratch/swin_meta_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/fmow_scratch/vit_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_scratch/vit_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/fmow_scratch/vit_group_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_scratch/vit_group_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/fmow_scratch/vit_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_scratch/vit_meta_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/fmow_scratch/vit_patch3d_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_scratch/vit_patch3d_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_group_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_group_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_meta_base.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/pretrain/vit_patch3d.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/pretrain/vit_patch3d.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/share/seg_munich.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/share/seg_munich_10band.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment/share/trainer.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/share/trainer.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/datamodules/seg_munich/module.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/datamodules/seg_munich/module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/models/encoder/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/models/encoder/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_group.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_group.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_group_for_mae.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_group_for_mae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_patch3d.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_patch3d.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_patch3d_for_mae.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/models/encoder/vit_patch3d_for_mae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/modules/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/modules/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/meta_embedding/modules/pretrain.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/modules/pretrain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_usat_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/fmow_finetuning/vit_usat_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/seg_scratch/vit_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/seg_scratch/vit_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/seg_scratch/vit_group_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/seg_scratch/vit_group_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/seg_scratch/vit_meta_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/seg_scratch/vit_meta_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/seg_scratch/vit_usat_base.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/seg_scratch/vit_usat_base.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiment/share/trainer.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/experiment/share/trainer1.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/meta_embedding/models/decoder/upernet.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/meta_embedding/models/decoder/upernet.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,32 +67,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.ckpt.executor": "Debug",
-    "Python.module.executor": "Run",
-    "Python.test.executor": "Run",
-    "Python.trainer.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/mnt/code/deep_learning/high_spectral_patch_embed/experiment/fmow_finetuning",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.ckpt.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.module.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.trainer.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/mnt/code/deep_learning/high_spectral_patch_embed/experiment/share&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Color Scheme Font&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/experiment/share" />
+      <recent name="$PROJECT_DIR$/experiment/seg_scratch" />
       <recent name="$PROJECT_DIR$/experiment/fmow_finetuning" />
       <recent name="$PROJECT_DIR$/src/meta_embedding/models/encoder" />
-      <recent name="$PROJECT_DIR$/experiment/seg_scratch" />
       <recent name="$PROJECT_DIR$/experiment/fmow_scratch" />
-      <recent name="$PROJECT_DIR$/experiment/share" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/meta_embedding/models/decoder" />
@@ -257,7 +236,10 @@
       <workItem from="1716776109198" duration="73000" />
       <workItem from="1716776193266" duration="6483000" />
       <workItem from="1716984355123" duration="3768000" />
-      <workItem from="1716995696657" duration="9916000" />
+      <workItem from="1716995696657" duration="14266000" />
+      <workItem from="1717483612385" duration="19920000" />
+      <workItem from="1718240750500" duration="2294000" />
+      <workItem from="1718249258157" duration="6857000" />
     </task>
     <task id="LOCAL-00002" summary="Finish group satmae">
       <option name="closed" value="true" />
@@ -315,7 +297,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715744220987</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Seg">
+      <option name="closed" value="true" />
+      <created>1717385742466</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1717385742466</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

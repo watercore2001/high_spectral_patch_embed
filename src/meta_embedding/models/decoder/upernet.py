@@ -39,7 +39,8 @@ class PyramidPoolingModule(nn.Module):
 
 
 class UPerDecoder(nn.Module):
-    def __init__(self, input_dims: list[int], output_dim: int = 512, use_ppm=False, pool_scales: list[int] = (1, 2, 3, 6)):
+    def __init__(self, input_dims: list[int], output_dim: int = 512, use_ppm=False,
+                 pool_scales: list[int] = (1, 2, 3, 6)):
         super().__init__()
 
         self.use_ppm = use_ppm

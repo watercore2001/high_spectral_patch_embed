@@ -1,6 +1,6 @@
 seed_everything: 0
 
-data: ../share/seg_munich.yaml
+data: ../share/seg_munich_10band.yaml
 
 model:
   class_path: meta_embedding.modules.ClassificationModule
@@ -30,11 +30,11 @@ model:
       max_lr: 1e-4
       min_lr: 1e-5
 
-trainer: ../share/trainer.yaml
+trainer: ../share/trainer2.yaml
 
 used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: seg
-  name: vit_group_base
+  name: vit_group_base1

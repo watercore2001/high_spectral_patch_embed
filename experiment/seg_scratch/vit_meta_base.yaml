@@ -1,17 +1,14 @@
 seed_everything: 0
 
-data: ../share/seg_munich.yaml
+data: ../share/seg_munich_10band.yaml
 
 model:
   class_path: meta_embedding.modules.ClassificationModule
   init_args:
-    # pretrain_ckpt_path: /mnt/disk/xials/workspace/fmow_mae/vit_base_dec512d1/checkpoints/epoch=049_val_mask_loss=0.0276.ckpt
     is_classify: False
     encoder:
       class_path: meta_embedding.models.encoder.MetaViTBase
       init_args:
-        # the reconstruction task is very hard,
-        # so there's no over-fitting during pretraining, we don't need dropout in pretrain
         in_chans: 10
         use_channel_embed: True
         use_transformer: False
@@ -32,11 +29,11 @@ model:
       max_lr: 1e-4
       min_lr: 1e-5
 
-trainer: ../share/trainer.yaml
+trainer: ../share/trainer2.yaml
 
 used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: seg
-  name: vit_meta_base
+  name: vit_meta_base2

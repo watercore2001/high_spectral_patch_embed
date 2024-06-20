@@ -31,11 +31,11 @@ model:
       max_lr: 1e-4
       min_lr: 1e-5
 
-trainer: ../share/trainer.yaml
+trainer: ../share/trainer2.yaml
 
 used_ckpt_for_test: "best"
 used_ckpt_for_predict: "no"
 
 wandb_logger:
   project: seg
-  name: vit_usat_base_true
+  name: vit_usat2
